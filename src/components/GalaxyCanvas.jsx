@@ -1,9 +1,45 @@
 import { Suspense, useRef, useEffect, useState } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
-import { CameraControls, Stars } from '@react-three/drei'
+import { CameraControls } from '@react-three/drei'
 import StarsField from './StarsField'
 import ShootingStars from './ShootingStars'
 import DistantGalaxy from './DistantGalaxy'
+import CustomStarfield from './CustomStarfield'
+import { EffectComposer, Bloom } from '@react-three/postprocessing'
+import Constellation from './Constellation'
+import * as THREE from 'three'
+
+// --- Constellation Data Configuration ---
+const geminiStars = [
+  new THREE.Vector3(-2, 1, 0),
+  new THREE.Vector3(-1, 2, 0),
+  new THREE.Vector3(0, 1.5, 0),
+  new THREE.Vector3(1, 2.2, 0),
+  new THREE.Vector3(2, 1, 0),
+  new THREE.Vector3(0.5, 0, 0),
+  new THREE.Vector3(-0.5, 0, 0),
+];
+
+const geminiConnections = [
+  [0, 1], [1, 2], [2, 3], [3, 4], // top arc
+  [2, 5], [2, 6] // body split
+];
+
+const sagittariusStars = [
+  new THREE.Vector3(-1, 1, 0),
+  new THREE.Vector3(0, 2, 0),
+  new THREE.Vector3(1, 1.5, 0),
+  new THREE.Vector3(2, 0.5, 0),
+  new THREE.Vector3(1, -0.5, 0),
+  new THREE.Vector3(0, -1, 0),
+  new THREE.Vector3(-1, -0.5, 0),
+];
+
+const sagittariusConnections = [
+  [0, 1], [1, 2], [2, 3],
+  [3, 4], [4, 5], [5, 6],
+  [6, 0] // loop shape
+];
 
 function SceneController({ selectedStar, isDragging }) {
   const controlsRef = useRef()
@@ -56,9 +92,11 @@ export default function GalaxyCanvas({ selectedStar, setSelectedStar, galaxyData
   return (
     <div className="w-full h-full absolute inset-0 z-0">
       <Canvas camera={{ position: [0, 0, 50], fov: 45 }} onPointerMissed={() => setSelectedStar(null)}>
+        <color attach="background" args={['#010104']} />
+        <fog attach="fog" args={['#010104', 50, 800]} />
+        
         {/* Environment Lighting Setup */}
-        <ambientLight intensity={0.1} />
-        <directionalLight position={[10, 10, 10]} intensity={2.0} />
+        <ambientLight intensity={2.5} />
         
         {/* Suspense is required for components that use `useLoader` asynchronously */}
         <Suspense fallback={null}>
@@ -73,16 +111,33 @@ export default function GalaxyCanvas({ selectedStar, setSelectedStar, galaxyData
           </group>
         </Suspense>
 
+        <EffectComposer disableNormalPass>
+          <Bloom luminanceThreshold={1.0} mipmapBlur intensity={1.5} />
+        </EffectComposer>
+
         {/* Deep Space Background Environment */}
-        <Stars 
-          radius={100} 
-          depth={50} 
-          count={7000} 
-          factor={4} 
-          saturation={0} 
-          fade 
-          speed={0.5} 
+        <CustomStarfield count={25000} maxDistance={600} />
+
+        {/* Zodiac Constellations */}
+        <Constellation 
+          name="Gemini"
+          stars={geminiStars} 
+          connections={geminiConnections} 
+          textureUrl="/textures/gemini_silhouette.png" 
+          position={[-200, 150, -500]} 
+          rotation={[0.2, 0.4, 0]}
+          scale={10} 
         />
+        <Constellation 
+          name="Sagittarius"
+          stars={sagittariusStars} 
+          connections={sagittariusConnections} 
+          textureUrl="/textures/sagittarius_silhouette.png" 
+          position={[250, -100, -600]} 
+          rotation={[-0.1, -0.3, 0.2]}
+          scale={12} 
+        />
+
         <ShootingStars count={8} />
 
         {/* The first CPU-based Points spiral galaxy (Orange/Purple) */}

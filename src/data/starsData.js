@@ -1,9 +1,8 @@
-// 20 orbs with random positions in 3D space
+// 14 orbs with random positions in 3D space
 // Neon colors for a vibrant aesthetic
 
-// Texture pool — 20 slots, one per orb (in order of creation).
+// Texture pool — 14 slots, one per orb (in order of creation).
 // Add your custom art filenames here as you create them.
-// null = fallback to emissive color glow.
 const TEXTURE_POOL = [
   '/textures/orb_01.jpg', // Orb 1
   '/textures/orb_02.jpg', // Orb 2
@@ -19,12 +18,6 @@ const TEXTURE_POOL = [
   '/textures/orb_12.jpg', // Orb 12
   '/textures/orb_13.jpg', // Orb 13
   '/textures/orb_14.jpg', // Orb 14
-  null,                   // Orb 15
-  null,                   // Orb 16
-  null,                   // Orb 17
-  null,                   // Orb 18
-  null,                   // Orb 19
-  null,                   // Orb 20
 ];
 
 const colors = [
@@ -88,4 +81,4 @@ const generateStars = (numStars) => {
   return stars;
 };
 
-export const starsData = generateStars(20);
+export const starsData = generateStars(14);

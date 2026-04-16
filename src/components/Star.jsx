@@ -1,22 +1,20 @@
-import { Suspense, useRef, useState } from 'react'
+import { Suspense, useRef, useState, useEffect } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { Html, useTexture } from '@react-three/drei'
 import * as THREE from 'three'
+import Atmosphere from './Atmosphere'
 
 function TexturedMaterial({ url, color, hovered }) {
   const texture = useTexture(url);
 
   return (
-    <>
-      <meshStandardMaterial
-        map={texture}
-        roughness={0.7}
-        metalness={0.1}
-        // Subtle emissive on hover so textured orbs still react
-        emissive={color}
-        emissiveIntensity={hovered ? 0.4 : 0.0}
-      />
-    </>
+    <meshStandardMaterial
+      map={texture}
+      emissive={color}
+      emissiveIntensity={hovered ? 0.4 : 0.0}
+      roughness={0.8}
+      metalness={0.1}
+    />
   )
 }
 
@@ -25,10 +23,8 @@ function FallbackMaterial({ color, hovered }) {
     <meshStandardMaterial
       color={color}
       emissive={color}
-      emissiveIntensity={hovered ? 2.5 : 1.0}
-      toneMapped={false}
+      emissiveIntensity={hovered ? 0.5 : 0.15}
       roughness={0.8}
-      metalness={0.2}
     />
   )
 }
@@ -96,8 +92,9 @@ export default function Star({ position, color, size, name, texture, onClick }) 
           </Suspense>
         </mesh>
         
+        {/* Soft Atmosphere Halo */}
+        <Atmosphere color={color} size={size} />
 
-  
         {/* 3D Label Component */}
         <Html position={[0, size * 1.8, 0]} center style={{ pointerEvents: 'none' }}>
           <div 
