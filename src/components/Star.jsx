@@ -110,3 +110,4 @@ export default function Star({ position, color, size, name, texture, onClick }) 
     </group>
   )
 }
+

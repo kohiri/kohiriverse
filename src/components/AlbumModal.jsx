@@ -1,8 +1,11 @@
 import React, { useMemo } from 'react';
 import MasonryGrid from './MasonryGrid';
+import Scrapbook from './Scrapbook';
 
 export default function AlbumModal({ selectedStar, onClose }) {
   if (!selectedStar) return null;
+
+  const isScrapbook = selectedStar.name === 'Album 2';
 
   return (
     <div className="absolute inset-0 flex items-center justify-center z-50 pointer-events-auto">
@@ -10,7 +13,7 @@ export default function AlbumModal({ selectedStar, onClose }) {
       <div className="absolute inset-0 bg-black/40 backdrop-blur-md" onClick={onClose}></div>
       
       {/* Modal Glassmorphism Panel */}
-      <div className="relative backdrop-blur-xl bg-white/10 border border-white/20 p-8 rounded-2xl shadow-[0_0_30px_rgba(255,255,255,0.1)] flex flex-col items-center max-w-2xl w-full mx-4 overflow-hidden glow-panel">
+      <div className={`relative backdrop-blur-xl bg-white/10 border border-white/20 p-8 rounded-2xl shadow-[0_0_30px_rgba(255,255,255,0.1)] flex flex-col items-center overflow-hidden glow-panel transition-all duration-700 ${isScrapbook ? 'max-w-4xl w-full mx-4' : 'max-w-2xl w-full mx-4'}`}>
         
         {/* Soft decorative glow behind the content */}
         <div className="absolute -top-10 -right-10 w-32 h-32 bg-white/10 rounded-full blur-3xl pointer-events-none"></div>
@@ -33,9 +36,11 @@ export default function AlbumModal({ selectedStar, onClose }) {
         
         <div className="w-full h-px bg-gradient-to-r from-transparent via-white/30 to-transparent my-6 z-10"></div>
         
-        {/* Gallery Grid using Masonry */}
-        <div className="w-full overflow-y-auto max-h-[60vh] z-10 pr-2 pb-2">
-          {selectedStar.photos && selectedStar.photos.length > 0 ? (
+        {/* Content Area */}
+        <div className={`w-full overflow-y-auto z-10 pr-2 pb-2 ${isScrapbook ? 'max-h-[85vh]' : 'max-h-[60vh]'}`}>
+          {isScrapbook ? (
+            <Scrapbook />
+          ) : selectedStar.photos && selectedStar.photos.length > 0 ? (
             <MasonryGrid 
               items={selectedStar.photos.map((photoUrl, idx) => ({ 
                 image: photoUrl, 

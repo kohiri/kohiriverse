@@ -4,7 +4,7 @@
 // Texture pool — 14 slots, one per orb (in order of creation).
 // Add your custom art filenames here as you create them.
 const TEXTURE_POOL = [
-  '/textures/orb_01.jpg', // Orb 1
+  '/textures/kush.jpg',   // Orb 1 (Kush)
   '/textures/orb_02.jpg', // Orb 2
   '/textures/orb_03.jpg', // Orb 3
   '/textures/orb_04.jpg', // Orb 4
