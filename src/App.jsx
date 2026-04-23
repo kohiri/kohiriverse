@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import GalaxyCanvas from './components/GalaxyCanvas'
 import AlbumModal from './components/AlbumModal'
 import SocialsMenu from './components/SocialsMenu'
@@ -8,6 +8,16 @@ function App() {
   const [selectedStar, setSelectedStar] = useState(null)
   const [searchQuery, setSearchQuery] = useState('')
   const [galaxyData, setGalaxyData] = useState(initialStarsData)
+  const [isMusicPlaying, setIsMusicPlaying] = useState(false)
+  const audioRef = useRef(null)
+
+  useEffect(() => {
+    if (isMusicPlaying && !selectedStar) {
+      audioRef.current?.play().catch(e => console.error("Audio playback failed", e));
+    } else {
+      audioRef.current?.pause();
+    }
+  }, [isMusicPlaying, selectedStar])
 
   const filteredStars = searchQuery.trim() 
     ? galaxyData.filter(star => star.name.toLowerCase().includes(searchQuery.toLowerCase()))
@@ -15,6 +25,13 @@ function App() {
 
   return (
     <div className="w-full h-screen bg-black relative overflow-hidden" style={{ fontFamily: '"Outfit", sans-serif' }}>
+      <audio 
+        ref={audioRef} 
+        src="/02 Cornfield Chase.mp3" 
+        loop 
+        preload="auto"
+      />
+
       {/* 3D Canvas Layer */}
       <GalaxyCanvas
         selectedStar={selectedStar}
@@ -56,6 +73,27 @@ function App() {
           </div>
           <SocialsMenu />
         </div>
+
+        {/* Audio Toggle Button */}
+        <button
+          onClick={() => setIsMusicPlaying(!isMusicPlaying)}
+          className="group flex items-center justify-center w-10 h-10 bg-white/5 backdrop-blur-2xl border border-white/20 rounded-full hover:bg-white/10 hover:border-white/30 transition-all duration-300 active:scale-95 shadow-[inset_0_1px_0.5px_rgba(255,255,255,0.1)] mr-[2px]"
+          aria-label={isMusicPlaying ? "Mute Music" : "Play Music"}
+        >
+          {isMusicPlaying ? (
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white/60 group-hover:text-white transition-colors duration-300">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+              <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+              <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+            </svg>
+          ) : (
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white/60 group-hover:text-white transition-colors duration-300">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+              <line x1="23" y1="9" x2="17" y2="15"></line>
+              <line x1="17" y1="9" x2="23" y2="15"></line>
+            </svg>
+          )}
+        </button>
 
         {/* Search Results Dropdown */}
         {filteredStars.length > 0 && (
