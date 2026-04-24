@@ -32,6 +32,20 @@ function App() {
         preload="auto"
       />
 
+      {/* CSS Shooting Stars */}
+      <section className="css-shooting-stars">
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+      </section>
+
       {/* 3D Canvas Layer */}
       <GalaxyCanvas
         selectedStar={selectedStar}

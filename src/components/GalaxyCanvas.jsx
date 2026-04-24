@@ -140,7 +140,7 @@ export default function GalaxyCanvas({
               scale={12}
             />
 
-            <ShootingStars count={8} />
+
 
             {/* Distant Galaxies */}
             <DistantGalaxy position={[-50, -25, -100]} />

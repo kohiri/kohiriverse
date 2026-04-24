@@ -68,7 +68,7 @@ const generateStars = (numStars) => {
       const orbIndex = stars.length;
       stars.push({
         id: `star_${orbIndex}`,
-        name: orbIndex === 0 ? 'Kush' : `Album ${orbIndex + 1}`,
+        name: orbIndex === 0 ? 'Kush' : orbIndex === 1 ? 'Scrapbook' : `Album ${orbIndex + 1}`,
         position,
         color,
         size,

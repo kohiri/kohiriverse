@@ -1,52 +1,144 @@
-import React, { useState, useEffect } from 'react'
-import { supabase } from '../supabaseClient'
-import PageCreator from './PageCreator'
+import React, { useState, useRef, useEffect } from 'react';
+import html2canvas from 'html2canvas';
+import { supabase } from '../supabaseClient';
+import ScrapbookCanvas from './scrapbook/ScrapbookCanvas';
+import StationeryToolbar from './scrapbook/StationeryToolbar';
+import FlipBook from './scrapbook/FlipBook';
 
 export default function Scrapbook() {
-  const [pages, setPages] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [currentPage, setCurrentPage] = useState(0)
-  const [showCreator, setShowCreator] = useState(false)
+  const [isEditing, setIsEditing] = useState(false);
+  const [pages, setPages] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [isUploading, setIsUploading] = useState(false);
+  
+  const [activeTool, setActiveTool] = useState('pen');
+  const [activeColor, setActiveColor] = useState('#540508');
+  const [selectedBackground, setSelectedBackground] = useState('1.png');
+  const [elements, setElements] = useState([]);
+  const [actionHistory, setActionHistory] = useState([]);
+  
+  const canvasWrapperRef = useRef(null);
+  const canvasRefInner = useRef(null);
+
+  const [scale, setScale] = useState(1);
+  useEffect(() => {
+    const handleResize = () => {
+      const availableHeight = window.innerHeight;
+      const maxAvailableHeight = availableHeight - 120; // account for modal margins/paddings
+      const requiredHeight = 650;
+      if (maxAvailableHeight < requiredHeight) {
+        setScale(maxAvailableHeight / requiredHeight);
+      } else {
+        setScale(1);
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    handleResize();
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
-    fetchPages()
-  }, [])
+    fetchPages();
+    const onAddedStroke = () => setActionHistory(prev => [...prev, 'stroke']);
+    window.addEventListener('addedStroke', onAddedStroke);
+    return () => window.removeEventListener('addedStroke', onAddedStroke);
+  }, []);
 
   const fetchPages = async () => {
     if (!supabase) {
-      setLoading(false)
-      return
+      setLoading(false);
+      return;
     }
-    setLoading(true)
+    setLoading(true);
     const { data, error } = await supabase
       .from('scrapbook_pages')
       .select('*')
-      .order('created_at', { ascending: true })
+      .order('created_at', { ascending: true });
 
     if (error) {
-      console.error('Error fetching pages:', error)
+      console.error('Error fetching pages:', error);
     } else {
-      setPages(data || [])
+      setPages(data || []);
     }
-    setLoading(false)
-  }
+    setLoading(false);
+  };
 
-  const nextPage = () => {
-    if (currentPage < pages.length - 1) setCurrentPage(c => c + 1)
-  }
+  const handleAddElement = (elementData) => {
+    const newElement = {
+      id: Date.now() + Math.random(),
+      type: elementData.type,
+      content: elementData.content,
+      x: 100,
+      y: 100,
+    };
+    setElements([...elements, newElement]);
+    setActionHistory([...actionHistory, 'element']);
+  };
 
-  const prevPage = () => {
-    if (currentPage > 0) setCurrentPage(c => c - 1)
-  }
+  const clearCanvas = () => {
+    const event = new CustomEvent('clearCanvas');
+    window.dispatchEvent(event);
+    setElements([]);
+    setActionHistory([]);
+  };
 
-  if (loading) {
-    return (
-      <div className="flex flex-col items-center justify-center p-20 gap-4">
-        <div className="animate-spin rounded-full h-12 w-12 border-4 border-zinc-700 border-t-blue-500"></div>
-        <p className="text-zinc-500 font-medium tracking-widest uppercase text-xs">Opening Book...</p>
-      </div>
-    )
-  }
+  const handleUndo = () => {
+    if (actionHistory.length === 0) return;
+    const lastAction = actionHistory[actionHistory.length - 1];
+    setActionHistory(prev => prev.slice(0, -1));
+
+    if (lastAction === 'element') {
+      setElements(prev => prev.slice(0, -1));
+    } else if (lastAction === 'stroke') {
+      window.dispatchEvent(new CustomEvent('undoCanvasStroke'));
+    }
+  };
+
+  const handleSavePage = async () => {
+    if (!canvasWrapperRef.current) return;
+    setIsUploading(true);
+    
+    try {
+      // Capture the canvas and all its elements (stickers, text, images)
+      const canvas = await html2canvas(canvasWrapperRef.current, {
+        backgroundColor: '#fdfdfd',
+        scale: 2, // better quality
+        useCORS: true, // for external images if any
+      });
+      
+      const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.9));
+      const fileName = `page_${Date.now()}.jpg`;
+      
+      // Upload to Supabase Storage
+      const { data: uploadData, error: uploadError } = await supabase.storage
+        .from('scrapbook')
+        .upload(fileName, blob);
+
+      if (uploadError) throw uploadError;
+
+      // Get Public URL
+      const { data: { publicUrl } } = supabase.storage
+        .from('scrapbook')
+        .getPublicUrl(fileName);
+
+      // Save to DB
+      const { error: dbError } = await supabase
+        .from('scrapbook_pages')
+        .insert([{ image_url: publicUrl }]);
+
+      if (dbError) throw dbError;
+      
+      // Reset editor
+      clearCanvas();
+      setIsEditing(false);
+      await fetchPages(); // Refresh the book!
+    } catch (err) {
+      console.error('Failed to save page', err);
+      alert(`Failed to save page: ${err.message || err.error_description || JSON.stringify(err)}`);
+    } finally {
+      setIsUploading(false);
+    }
+  };
 
   if (!supabase) {
     return (
@@ -59,93 +151,112 @@ export default function Scrapbook() {
           <code className="bg-zinc-800 px-1 rounded">supabaseClient.js</code>.
         </p>
       </div>
-    )
+    );
+  }
+
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center p-20 gap-4">
+        <div className="animate-spin rounded-full h-12 w-12 border-4 border-zinc-700 border-t-blue-500"></div>
+        <p className="text-zinc-500 font-medium tracking-widest uppercase text-xs">Loading Book...</p>
+      </div>
+    );
   }
 
   return (
-    <div className="flex flex-col items-center gap-12 py-10">
-      {/* Scrapbook Container */}
-      <div className="relative group perspective-1000">
-        {pages.length === 0 ? (
-          <div className="w-[500px] h-[700px] bg-zinc-800 rounded-2xl border-4 border-dashed border-zinc-700 flex flex-col items-center justify-center p-12 text-center gap-6">
-            <div className="text-6xl">📖</div>
-            <h3 className="text-zinc-300 text-2xl font-bold">The Book starts here</h3>
-            <p className="text-zinc-500">Capture the first page and leave your mark on the universe.</p>
-            <button 
-                onClick={() => setShowCreator(true)}
-                className="bg-blue-600 hover:bg-blue-500 text-white px-8 py-3 rounded-xl font-bold transition-all shadow-lg hover:shadow-blue-500/20"
-            >
-                Create First Page
-            </button>
+    <div className="scrapbook-container" style={{ padding: '10px 0', zoom: scale }}>
+      
+      {!isEditing ? (
+        <div style={{ position: 'relative', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          {pages.length === 0 ? (
+            <div className="flex flex-col items-center justify-center p-12 text-center gap-6 glass-panel" style={{ maxWidth: '400px', margin: '100px auto' }}>
+              <div className="text-6xl">📖</div>
+              <h3 className="text-zinc-800 text-2xl font-bold">The Book starts here</h3>
+              <p className="text-zinc-600">Capture the first page and leave your mark on the universe.</p>
+              <button 
+                  onClick={() => setIsEditing(true)}
+                  style={{ backgroundColor: 'var(--text-main)', color: 'white', fontWeight: 'bold' }}
+              >
+                  Create First Page
+              </button>
+            </div>
+          ) : (
+            <FlipBook pages={pages} onAddPage={() => setIsEditing(true)} />
+          )}
+        </div>
+      ) : (
+        <div style={{ margin: 'auto', display: 'flex', gap: '40px', alignItems: 'center', justifyContent: 'center', padding: '20px', width: '100%' }}>
+          
+          {/* Left Panel: Tools & Actions */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <StationeryToolbar 
+              activeTool={activeTool}
+              setActiveTool={setActiveTool}
+              activeColor={activeColor}
+              setActiveColor={setActiveColor}
+              onClear={clearCanvas}
+              onAddElement={handleAddElement}
+              onUndo={handleUndo}
+            />
+            
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <button 
+                onClick={handleSavePage}
+                disabled={isUploading}
+                style={{ 
+                    padding: '12px', 
+                    fontSize: '1.1rem', 
+                    backgroundColor: isUploading ? 'var(--accent-pink)' : 'var(--text-main)', 
+                    color: 'white', 
+                    fontWeight: 'bold', 
+                    width: '100%' 
+                }}
+              >
+                {isUploading ? 'Saving...' : 'Save Page'}
+              </button>
+              <button 
+                onClick={() => setIsEditing(false)}
+                disabled={isUploading}
+                style={{ padding: '12px', fontSize: '1.1rem', backgroundColor: '#fff', color: 'var(--text-main)', border: '1px solid #ccc', width: '100%' }}
+              >
+                Cancel
+              </button>
+            </div>
           </div>
-        ) : (
-          <div className="flex items-center gap-8">
-            {/* Nav Left */}
-            <button 
-                onClick={prevPage}
-                disabled={currentPage === 0}
-                className={`p-4 rounded-full bg-zinc-800 border border-zinc-700 text-white transition-all ${currentPage === 0 ? 'opacity-20 cursor-not-allowed' : 'hover:bg-zinc-700 shadow-xl'}`}
-            >
-                ←
-            </button>
 
-            {/* The Page */}
-            <div className="relative w-[500px] h-[700px] bg-[#f8f5f0] shadow-[10px_10px_30px_rgba(0,0,0,0.5),-10px_-10px_30px_rgba(255,255,255,0.02)] rounded-sm border-l-[15px] border-zinc-900 overflow-hidden transform -rotate-1 transition-transform hover:rotate-0 duration-700">
-                <img 
-                    src={pages[currentPage].image_url} 
-                    alt={`Page ${currentPage + 1}`}
-                    className="w-full h-full object-cover mix-multiply"
-                />
-                <div className="absolute bottom-6 right-8 text-zinc-400 font-['Indie_Flower'] italic">
-                    Page {currentPage + 1} of {pages.length}
-                </div>
-                
-                {/* Paper Texture Overlay */}
-                <div className="absolute inset-0 pointer-events-none opacity-20 mix-blend-overlay bg-[url('https://www.transparenttextures.com/patterns/paper.png')]"></div>
+          {/* Right Panel: Scrapbook Area */}
+          <div className="scrapbook-wrapper" style={{ display: 'flex', flexDirection: 'column', gap: '16px', alignItems: 'center' }}>
+            
+            {/* Options */}
+            <div style={{ display: 'flex', gap: '8px' }}>
+              {['1.png', '2.png', '3.png', '4.png', '5.png'].map(bg => (
+                <button 
+                  key={bg} 
+                  onClick={() => setSelectedBackground(bg)}
+                  className={selectedBackground === bg ? 'active' : ''}
+                  style={{ padding: '6px 16px', fontSize: '0.9rem' }}
+                >
+                  Option {bg[0]}
+                </button>
+              ))}
+            </div>
+            
+            {/* Canvas */}
+            <div ref={canvasWrapperRef} style={{ position: 'relative', border: '1px solid #ddd', borderRadius: '4px', overflow: 'hidden' }}>
+              <ScrapbookCanvas 
+                activeTool={activeTool} 
+                activeColor={activeColor}
+                elements={elements}
+                setElements={setElements}
+                canvasRefInner={canvasRefInner}
+                selectedBackground={selectedBackground}
+              />
             </div>
 
-            {/* Nav Right */}
-            <button 
-                onClick={nextPage}
-                disabled={currentPage === pages.length - 1}
-                className={`p-4 rounded-full bg-zinc-800 border border-zinc-700 text-white transition-all ${currentPage === pages.length - 1 ? 'opacity-20 cursor-not-allowed' : 'hover:bg-zinc-700 shadow-xl'}`}
-            >
-                →
-            </button>
           </div>
-        )}
-
-        {/* Global Toolbar */}
-        <div className="flex gap-4 mt-8">
-             <button 
-                onClick={() => setShowCreator(true)}
-                className="bg-white/5 hover:bg-white/10 text-white px-6 py-2 rounded-lg text-sm font-semibold tracking-wide border border-white/10 backdrop-blur-sm transition-all flex items-center gap-2"
-            >
-                ✏️ Add a Page
-            </button>
-            <button 
-                onClick={fetchPages}
-                className="bg-white/5 hover:bg-white/10 text-white px-6 py-2 rounded-lg text-sm font-semibold tracking-wide border border-white/10 backdrop-blur-sm transition-all"
-            >
-                🔄 Refresh
-            </button>
         </div>
-      </div>
-
-      {showCreator && (
-        <PageCreator 
-            onCancel={() => setShowCreator(false)}
-            onPageAdded={() => {
-                setShowCreator(false)
-                fetchPages()
-            }}
-        />
       )}
-
-      <style dangerouslySetInnerHTML={{ __html: `
-        .mix-multiply { mix-blend-mode: multiply; }
-        .perspective-1000 { perspective: 1000px; }
-      `}} />
+      
     </div>
-  )
+  );
 }

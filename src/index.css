@@ -8,3 +8,169 @@ html, body, #root {
   background-color: #000;
   overflow: hidden;
 }
+
+:root {
+  --bg-lavender: #faf5eb;
+  --bg-gradient: linear-gradient(135deg, #ebd6b5 0%, #fdfbf7 100%);
+  --paper-color: #fdfcff;
+  --text-main: #540508;
+  --accent-pink: #d1b47b;
+  --accent-lilac: #c7a568;
+  --accent-blue: #dec69a;
+  --shadow-soft: 0 10px 30px rgba(135, 115, 80, 0.2), inset 0 0 0 1px rgba(255, 255, 255, 0.9);
+  --shadow-paper: 0 15px 40px rgba(84, 5, 8, 0.15), inset 0 0 0 1px rgba(255, 255, 255, 0.8);
+}
+
+.scrapbook-container {
+  background: url('/Table.jpeg') center center;
+  background-size: cover;
+  background-attachment: fixed;
+  font-family: 'Inter', sans-serif;
+  color: var(--text-main);
+  position: relative;
+  width: 100%;
+  min-height: 100%;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.scrapbook-container::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-image: radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.6) 0%, transparent 40%),
+                    radial-gradient(circle at 80% 70%, rgba(199, 165, 104, 0.3) 0%, transparent 40%);
+  z-index: -1;
+  pointer-events: none;
+}
+
+.paper-texture {
+  background-color: var(--paper-color);
+  background-image: url('https://www.transparenttextures.com/patterns/paper.png');
+  background-blend-mode: overlay;
+  box-shadow: var(--shadow-paper);
+}
+
+/* Scrapbook FlipBook Styles */
+.page {
+  background-color: white;
+  box-shadow: 0 0 5px rgba(0,0,0,0.2);
+}
+.page-cover {
+  background-color: #2c2c2c !important;
+  border: 1px solid #111;
+  color: white;
+  box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+  background-size: cover;
+  background-position: center;
+}
+.page-cover-top { border-top-left-radius: 5px; border-bottom-left-radius: 5px; }
+.page-cover-bottom { border-top-right-radius: 5px; border-bottom-right-radius: 5px; }
+.page-inner {
+  background-color: #fdfdfd;
+  background-image: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/937765/linedpaper.png');
+  border: 1px solid #e0e0e0;
+}
+.handwriting { font-family: 'Patrick Hand', cursive; }
+
+.glass-panel {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: var(--shadow-soft);
+  border-radius: 20px;
+}
+
+.scrapbook-container button {
+  border-radius: 12px;
+  border: none;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 6px rgba(183, 172, 204, 0.2);
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.scrapbook-container button:hover {
+  background-color: var(--text-main);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(84, 5, 8, 0.2);
+}
+.scrapbook-container button.active {
+  background-color: var(--text-main);
+  color: white;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+  transform: translateY(1px);
+}
+
+/* CSS Shooting Stars */
+.css-shooting-stars {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 1; /* Above canvas, behind UI */
+  overflow: hidden;
+}
+
+.css-shooting-stars span {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 4px;
+  height: 4px;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.1), 0 0 0 8px rgba(255, 255, 255, 0.1), 0 0 20px rgba(255, 255, 255, 1);
+  animation: shootingStarAnimate 3s linear infinite;
+}
+
+.css-shooting-stars span::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 300px;
+  height: 1px;
+  background: linear-gradient(90deg, #fff, transparent);
+}
+
+@keyframes shootingStarAnimate {
+  0% {
+      transform: rotate(315deg) translateX(0);
+      opacity: 1;
+  }
+  7% {
+      opacity: 1;
+  }
+  10% {
+      transform: rotate(315deg) translateX(-1500px);
+      opacity: 0;
+  }
+  100% {
+      transform: rotate(315deg) translateX(-1500px);
+      opacity: 0;
+  }
+}
+
+.css-shooting-stars span:nth-child(1) { top: 0; right: 0; left:initial; animation-delay:0s; animation-duration:15s; }
+.css-shooting-stars span:nth-child(2) { top: 0; right: 80px; left:initial; animation-delay:1.5s; animation-duration:15.2s; }
+.css-shooting-stars span:nth-child(3) { top: 80px; right: 0px; left:initial; animation-delay:3s; animation-duration:14.8s; }
+.css-shooting-stars span:nth-child(4) { top: 0; right: 180px; left:initial; animation-delay:4.5s; animation-duration:15.5s; }
+.css-shooting-stars span:nth-child(5) { top: 0; right: 400px; left:initial; animation-delay:6s; animation-duration:14.5s; }
+.css-shooting-stars span:nth-child(6) { top: 0; right: 600px; left:initial; animation-delay:7.5s; animation-duration:15.3s; }
+.css-shooting-stars span:nth-child(7) { top: 300px; right: 0px; left:initial; animation-delay:9s; animation-duration:14.7s; }
+.css-shooting-stars span:nth-child(8) { top: 0px; right: 700px; left:initial; animation-delay:10.5s; animation-duration:15.1s; }
+.css-shooting-stars span:nth-child(9) { top: 0px; right: 1000px; left:initial; animation-delay:12s; animation-duration:14.9s; }
+.css-shooting-stars span:nth-child(10) { top: 0px; right: 450px; left:initial; animation-delay:13.5s; animation-duration:15.4s; }
