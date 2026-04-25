@@ -108,6 +108,28 @@ export default function ScrapbookCanvas({ activeTool, activeColor, elements, set
     setIsDrawing(false);
   };
 
+  // --- Image selection & border toggle state ---
+  const [selectedImageId, setSelectedImageId] = useState(null);
+
+  // Clear selection before html2canvas captures the page (so toolbar isn't baked in)
+  useEffect(() => {
+    const handleDeselectAll = () => setSelectedImageId(null);
+    window.addEventListener('deselectAll', handleDeselectAll);
+    return () => window.removeEventListener('deselectAll', handleDeselectAll);
+  }, []);
+
+  const toggleBorder = (e, id) => {
+    e.stopPropagation();
+    setElements(prev =>
+      prev.map(el => el.id === id ? { ...el, showBorder: !el.showBorder } : el)
+    );
+  };
+
+  const handleCanvasClick = () => {
+    setSelectedImageId(null);
+  };
+
+
   return (
     <div 
       style={{
@@ -120,6 +142,7 @@ export default function ScrapbookCanvas({ activeTool, activeColor, elements, set
         backgroundRepeat: 'no-repeat',
         filter: 'drop-shadow(0 15px 40px rgba(133, 115, 166, 0.25))', // adds nice shadow to the transparent PNG edges
       }}
+      onClick={handleCanvasClick}
     >
       <canvas
         ref={canvasRef}
@@ -190,15 +213,99 @@ export default function ScrapbookCanvas({ activeTool, activeColor, elements, set
         }
 
         if (el.type === 'image') {
+          const isSelected = selectedImageId === el.id;
+          // showBorder defaults to true if not explicitly set to false
+          const hasBorder = el.showBorder !== false;
+
           return (
             <Rnd
               key={el.id}
               default={{ x: el.x, y: el.y, width: 150, height: 150 }}
               bounds="parent"
-              style={{ zIndex: 20 }}
+              style={{ zIndex: isSelected ? 30 : 20 }}
+              onMouseDown={(e) => e.stopPropagation()}
+              onClick={(e) => {
+                e.stopPropagation();
+                setSelectedImageId(isSelected ? null : el.id);
+              }}
             >
-              <div style={{ width: '100%', height: '100%', cursor: 'grab', border: '4px solid white', boxShadow: '0 4px 10px rgba(0,0,0,0.1)' }}>
-                <img src={el.content} alt="Upload" style={{ width: '100%', height: '100%', objectFit: 'cover' }} draggable={false} />
+              <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+
+                {/* Floating toolbar — only visible when selected */}
+                {isSelected && (
+                  <div
+                    style={{
+                      position: 'absolute',
+                      top: '-38px',
+                      left: '50%',
+                      transform: 'translateX(-50%)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      backgroundColor: 'rgba(30, 20, 40, 0.88)',
+                      backdropFilter: 'blur(8px)',
+                      border: '1px solid rgba(255,255,255,0.15)',
+                      borderRadius: '20px',
+                      padding: '4px 10px',
+                      boxShadow: '0 4px 16px rgba(0,0,0,0.35)',
+                      whiteSpace: 'nowrap',
+                      zIndex: 100,
+                    }}
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <span style={{ fontSize: '11px', color: 'rgba(255,255,255,0.6)', fontFamily: 'sans-serif' }}>
+                      Border
+                    </span>
+                    {/* Toggle pill */}
+                    <div
+                      onClick={(e) => toggleBorder(e, el.id)}
+                      style={{
+                        width: '36px',
+                        height: '20px',
+                        borderRadius: '10px',
+                        backgroundColor: hasBorder ? '#a78bfa' : 'rgba(255,255,255,0.15)',
+                        cursor: 'pointer',
+                        position: 'relative',
+                        transition: 'background-color 0.2s ease',
+                        flexShrink: 0,
+                      }}
+                    >
+                      <div style={{
+                        position: 'absolute',
+                        top: '3px',
+                        left: hasBorder ? '18px' : '3px',
+                        width: '14px',
+                        height: '14px',
+                        borderRadius: '50%',
+                        backgroundColor: 'white',
+                        transition: 'left 0.2s ease',
+                        boxShadow: '0 1px 4px rgba(0,0,0,0.3)',
+                      }} />
+                    </div>
+                  </div>
+                )}
+
+                {/* Image itself */}
+                <div style={{
+                  width: '100%',
+                  height: '100%',
+                  cursor: 'grab',
+                  border: hasBorder ? '4px solid white' : '4px solid transparent',
+                  boxShadow: hasBorder ? '0 4px 10px rgba(0,0,0,0.15)' : 'none',
+                  boxSizing: 'border-box',
+                  transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
+                  // Selection glow indicator
+                  outline: isSelected ? '2px dashed rgba(167,139,250,0.8)' : '2px solid transparent',
+                  outlineOffset: '2px',
+                }}>
+                  <img
+                    src={el.content}
+                    alt="Upload"
+                    style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                    draggable={false}
+                  />
+                </div>
+
               </div>
             </Rnd>
           );

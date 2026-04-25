@@ -99,6 +99,11 @@ export default function Scrapbook() {
     setIsUploading(true);
     
     try {
+      // Deselect any selected image so the floating toolbar is hidden before capture
+      window.dispatchEvent(new CustomEvent('deselectAll'));
+      // Wait two frames for React to re-render the deselected state
+      await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+
       // Capture the canvas and all its elements (stickers, text, images)
       const canvas = await html2canvas(canvasWrapperRef.current, {
         backgroundColor: '#fdfdfd',
