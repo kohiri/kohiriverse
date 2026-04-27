@@ -1,0 +1,259 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@200;400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Anton&display=swap');
+
+:root {
+  --bg-color: #050505;
+  --text-color: #ffffff;
+}
+
+.vinyl-app-root * {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.vinyl-app-root {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: 'Outfit', sans-serif;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+.app-container {
+  position: relative;
+  min-height: 100vh;
+  padding: 4rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.background-glow {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80vw;
+  height: 80vh;
+  background: radial-gradient(circle, rgba(138,43,226,0.05) 0%, rgba(0,0,0,0) 70%);
+  z-index: -1;
+  pointer-events: none;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 5rem;
+}
+
+.header h1 {
+  font-weight: 200;
+  font-size: 2.5rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+}
+
+.header p {
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* Grid Layout */
+.playlist-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 4rem 3rem;
+  width: 100%;
+  max-width: 1200px;
+}
+
+/* Vinyl Record Component */
+.vinyl-record-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  group: true;
+}
+
+.vinyl-record-container {
+  position: relative;
+  width: 250px;
+  height: 250px;
+  margin-bottom: 1.5rem;
+  perspective: 1000px;
+}
+
+/* The Cover */
+.vinyl-cover {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 1px rgba(255,255,255,0.2) inset;
+  transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.cover-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cover-reflection {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 40%, rgba(0,0,0,0.2) 100%);
+  pointer-events: none;
+}
+
+/* The Disc */
+.vinyl-disc {
+  position: absolute;
+  top: 2%;
+  left: 0;
+  width: 96%;
+  height: 96%;
+  background: #111;
+  border-radius: 50%;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 0 10px rgba(0,0,0,0.8);
+  /* The sliding magic */
+  transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.5s ease;
+  --vinyl-color: #888; /* fallback, overridden by inline style */
+}
+
+.vinyl-grooves {
+  position: absolute;
+  width: 95%;
+  height: 95%;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.05);
+  background: repeating-radial-gradient(
+    #111,
+    #111 2px,
+    #181818 3px,
+    #111 4px
+  );
+}
+
+.vinyl-label {
+  position: relative;
+  width: 35%;
+  height: 35%;
+  border-radius: 50%;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 0 5px rgba(0,0,0,0.5) inset;
+}
+
+.vinyl-hole {
+  width: 10px;
+  height: 10px;
+  background-color: var(--bg-color);
+  border-radius: 50%;
+  box-shadow: 0 0 2px rgba(0,0,0,0.8) inset;
+}
+
+/* Hover Effects */
+.vinyl-record-wrapper:hover .vinyl-disc {
+  transform: translateX(45%) rotate(45deg);
+  box-shadow:
+    15px 0 25px rgba(0,0,0,0.6),
+    0 0 30px 6px color-mix(in srgb, var(--vinyl-color) 45%, transparent),
+    0 0 60px 10px color-mix(in srgb, var(--vinyl-color) 18%, transparent);
+}
+
+.vinyl-record-wrapper:hover .vinyl-cover {
+  transform: scale(1.02);
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.8),
+    0 0 20px 4px color-mix(in srgb, var(--vinyl-color) 30%, transparent);
+}
+
+.album-title {
+  font-size: 0.9rem;
+  letter-spacing: 0.1em;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.7);
+  transition: color 0.3s ease;
+}
+
+.vinyl-record-wrapper:hover .album-title {
+  color: rgba(255, 255, 255, 1);
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+/* ─── Club Kuru Feature Section ─────────────────────────────── */
+.ck-section {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 6rem 0;
+}
+
+.ck-foreground {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  opacity: 0;
+  transform: translateY(40px) scale(0.98);
+  transition: opacity 1.2s cubic-bezier(0.2, 0.8, 0.2, 1), transform 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Subtle glow effect behind the image */
+.ck-foreground::before {
+  content: '';
+  position: absolute;
+  width: 80%;
+  height: 80%;
+  background: radial-gradient(circle, rgba(185, 49, 1, 0.2) 0%, transparent 60%);
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 1.5s ease 0.6s; /* Fades in smoothly after the main transition */
+}
+
+.ck-foreground--visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.ck-foreground--visible::before {
+  opacity: 1;
+}
+
+.ck-ref-image {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  box-shadow: 0 20px 80px rgba(0, 0, 0, 0.5); /* Soft grounding shadow */
+}

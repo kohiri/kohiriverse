@@ -3,6 +3,7 @@ import GalaxyCanvas from './components/GalaxyCanvas'
 import AlbumModal from './components/AlbumModal'
 import SocialsMenu from './components/SocialsMenu'
 import { starsData as initialStarsData } from './data/starsData'
+import VinylApp from './components/vinyl/VinylApp'
 
 function App() {
   const [selectedStar, setSelectedStar] = useState(null)
@@ -33,27 +34,31 @@ function App() {
       />
 
       {/* CSS Shooting Stars */}
-      <section className="css-shooting-stars">
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-      </section>
+      {selectedStar?.id !== 'star_2' && (
+        <section className="css-shooting-stars">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+        </section>
+      )}
 
       {/* 3D Canvas Layer */}
-      <GalaxyCanvas
-        selectedStar={selectedStar}
-        setSelectedStar={setSelectedStar}
-        galaxyData={galaxyData}
-        setGalaxyData={setGalaxyData}
-        setIsDragging={() => {}} // Placeholder or real state if needed
-      />
+      {selectedStar?.id !== 'star_2' && (
+        <GalaxyCanvas
+          selectedStar={selectedStar}
+          setSelectedStar={setSelectedStar}
+          galaxyData={galaxyData}
+          setGalaxyData={setGalaxyData}
+          setIsDragging={() => {}} // Placeholder or real state if needed
+        />
+      )}
 
       {/* Header Label (Top Left) */}
       <div className="absolute top-0 left-0 p-10 flex flex-col justify-start z-10 pointer-events-none select-none">
@@ -129,8 +134,14 @@ function App() {
         )}
       </div>
 
-      {selectedStar && (
+      {selectedStar && selectedStar.id !== 'star_2' && (
         <AlbumModal selectedStar={selectedStar} onClose={() => setSelectedStar(null)} />
+      )}
+
+      {selectedStar?.id === 'star_2' && (
+        <div className="fixed inset-0 z-50 overflow-y-auto bg-black">
+          <VinylApp onBack={() => setSelectedStar(null)} />
+        </div>
       )}
     </div>
   )
