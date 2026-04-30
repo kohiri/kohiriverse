@@ -1,0 +1,38 @@
+@font-face {
+    font-family: 'Flemish Script';
+    src: url('../../assets/fonts/OPTIFlemish-Script.otf');
+}
+
+@font-face {
+    font-family: 'title font';
+    /* src: url('../../assets/fonts/BrotherSignature-7BWnK.otf'); */
+    src: url('../../assets/fonts/fontspring-demo-west-condensed.otf');
+}
+
+:root {
+    --color-maroon: #56021F;
+    --color-pink: #F7CFD8;
+    --color-paler-pink: #F5CCDE; 
+  
+    --font-curve: 'Flemish Script';
+    --font-normal: 'Playfair Display', serif;
+
+    /* Font Sizes */
+  --font-large: 60px;
+  --font-medium: 1.2rem;
+  --font-small: 18px;
+}
+
+.ballet-font {
+  font-family: "Ballet", cursive;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.lavishly-yours-regular {
+  font-family: "Lavishly Yours", cursive;
+  font-weight: 400;
+  font-style: normal;
+}
+

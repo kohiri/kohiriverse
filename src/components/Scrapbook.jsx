@@ -23,14 +23,17 @@ export default function Scrapbook() {
   const [scale, setScale] = useState(1);
   useEffect(() => {
     const handleResize = () => {
-      const availableHeight = window.innerHeight;
-      const maxAvailableHeight = availableHeight - 120; // account for modal margins/paddings
+      const availableHeight = window.innerHeight - 120;
+      const availableWidth = window.innerWidth - 40;
+      
+      const isMobile = window.innerWidth < 768;
       const requiredHeight = 650;
-      if (maxAvailableHeight < requiredHeight) {
-        setScale(maxAvailableHeight / requiredHeight);
-      } else {
-        setScale(1);
-      }
+      const requiredWidth = isMobile ? 450 : 700; // 450 canvas + tools
+      
+      const scaleH = availableHeight / requiredHeight;
+      const scaleW = availableWidth / requiredWidth;
+      
+      setScale(Math.min(scaleH, scaleW, 1));
     };
     window.addEventListener('resize', handleResize);
     handleResize();
@@ -101,15 +104,31 @@ export default function Scrapbook() {
     try {
       // Deselect any selected image so the floating toolbar is hidden before capture
       window.dispatchEvent(new CustomEvent('deselectAll'));
+      
+      // Remove focus from contentEditable to prevent caret/focus-related shifting
+      if (document.activeElement && document.activeElement.blur) {
+        document.activeElement.blur();
+      }
+
       // Wait two frames for React to re-render the deselected state
       await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+
+      // Temporarily set scale to 1 for pristine capture
+      const originalScale = scale;
+      setScale(1);
+      await new Promise(resolve => setTimeout(resolve, 50)); // let DOM update and layout settle
 
       // Capture the canvas and all its elements (stickers, text, images)
       const canvas = await html2canvas(canvasWrapperRef.current, {
         backgroundColor: '#fdfdfd',
         scale: 2, // better quality
         useCORS: true, // for external images if any
+        scrollY: -window.scrollY, // Fix for browser scroll offset issues in html2canvas
+        windowWidth: document.documentElement.offsetWidth,
+        windowHeight: document.documentElement.offsetHeight,
       });
+      
+      setScale(originalScale);
       
       const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.9));
       const fileName = `page_${Date.now()}.jpg`;
@@ -169,7 +188,7 @@ export default function Scrapbook() {
   }
 
   return (
-    <div className="scrapbook-container" style={{ padding: '10px 0', zoom: scale }}>
+    <div className="scrapbook-container" style={{ padding: '10px 0' }}>
       
       {!isEditing ? (
         <div style={{ position: 'relative', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -190,7 +209,7 @@ export default function Scrapbook() {
           )}
         </div>
       ) : (
-        <div style={{ margin: 'auto', display: 'flex', gap: '40px', alignItems: 'center', justifyContent: 'center', padding: '20px', width: '100%' }}>
+        <div style={{ margin: 'auto', display: 'flex', flexWrap: 'wrap', gap: '40px', alignItems: 'center', justifyContent: 'center', padding: '20px', width: '100%' }}>
           
           {/* Left Panel: Tools & Actions */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
@@ -246,16 +265,26 @@ export default function Scrapbook() {
               ))}
             </div>
             
-            {/* Canvas */}
-            <div ref={canvasWrapperRef} style={{ position: 'relative', border: '1px solid #ddd', borderRadius: '4px', overflow: 'hidden' }}>
-              <ScrapbookCanvas 
-                activeTool={activeTool} 
-                activeColor={activeColor}
-                elements={elements}
-                setElements={setElements}
-                canvasRefInner={canvasRefInner}
-                selectedBackground={selectedBackground}
-              />
+            {/* Canvas scaled visually while reserving original space */}
+            <div style={{ width: 450 * scale, height: 600 * scale, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div style={{ 
+                transform: `scale(${scale})`, 
+                transformOrigin: 'center center',
+                width: 450, 
+                height: 600 
+              }}>
+                <div ref={canvasWrapperRef} style={{ width: 450, height: 600, position: 'relative', border: '1px solid #ddd', borderRadius: '4px', overflow: 'hidden' }}>
+                  <ScrapbookCanvas 
+                    activeTool={activeTool} 
+                    activeColor={activeColor}
+                    elements={elements}
+                    setElements={setElements}
+                    canvasRefInner={canvasRefInner}
+                    selectedBackground={selectedBackground}
+                    scale={scale}
+                  />
+                </div>
+              </div>
             </div>
 
           </div>

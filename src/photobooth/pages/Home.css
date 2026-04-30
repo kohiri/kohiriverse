@@ -1,0 +1,531 @@
+@import './styles.css';
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+
+
+.background-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    min-height: 100vh;
+    position: relative;
+    background-image: url('../../assets/images/photobooth bg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    overflow: hidden;
+}
+
+.info-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: absolute;
+    top: 20px;
+    right: 25px;
+    justify-content: flex-end;
+    z-index: 10;
+}
+
+.decor-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 1px;
+    position: relative;
+    z-index: 5;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: full;
+}
+
+.main-page-name {
+    font-family: "Ballet", cursive;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    color: var(--color-pink);
+    font-size: 8rem;
+    margin-top: 30px;
+    margin-bottom: 8px;
+}
+
+.button-container {
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+    margin: 0rem 0;
+}
+
+.button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    appearance: none;
+    border: transparent;
+    background: var(--color-pink);
+    outline: none;
+    cursor: pointer;
+    border-radius: 0.5rem;
+    padding: 1rem 1rem;
+    width: 160px;
+    height: 50px;
+    text-align: center;
+    transition: all 0.45s ease-out;
+    position: relative;
+
+    /* for text */
+    font-family: sans-serif;
+    color: var(--color-maroon);
+    font-size: var(--font-small);
+    font-weight: 500;
+  }
+  
+  .button:hover {
+    transform: translateZ(0px);
+    scale: 1.1  ;
+  }
+
+/* FEEDBACK PROMPT */
+
+/* semi-transparent backdrop */
+.prompt-overlay {
+  position: fixed;
+  inset: 0; /* top:0; right:0; bottom:0; left:0; */
+  background: rgba(0, 0, 0, 0.6); /* darken everything behind */
+  display: grid;
+  place-items: center;
+  z-index: 1000;
+}
+
+/* the white box */
+.prompt-box {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  width: clamp(280px, 80%, 400px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  font-family: var(--font-normal);
+}
+
+/* message */
+.prompt-message {
+  margin: 0 0 1rem;
+  font-size: 500;
+  font-weight: 500;
+  color: var(--color-maroon);
+}
+
+/* input field */
+.prompt-input {
+  width: 100%;
+  font-size: 1rem;
+  padding-top: 0.75rem; 
+  font-family: var(--font-normal);
+  border: 2px solid var(--color-maroon);
+  border-radius: 0.25rem;
+  margin-bottom: 1rem;
+  outline: none;
+
+  line-height: 1.4;
+  height: calc(1.4em * 3 + 1rem);
+  resize: none;
+  text-indent: 0.75rem;
+}
+
+/* actions row */
+.prompt-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+/* buttons */
+.prompt-btn {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  font-family: var(--font-normal);
+}
+
+.prompt-confirm {
+  background: var(--color-maroon);
+  color: white;
+}
+
+.prompt-cancel {
+  background: #eee;
+  color: #333;
+}
+
+/* disabled state */
+.prompt-confirm:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.share-icon path,
+.share-icon circle,
+.share-icon rect
+ {
+  /* fill: var(--color-pink); */
+  stroke: var(--color-pink);
+}
+
+.feedback-icon {
+  stroke: var(--color-pink);
+}
+
+/* .icon-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+} */
+
+.auth-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    appearance: none;
+    border: red;
+    background: var(--color-pink);
+    outline: none;
+    cursor: pointer;
+    border-radius: 0.5rem;
+    padding: 0.7rem 1rem;
+    text-align: center;
+    position: relative;
+}
+
+.auth-button:hover {
+    opacity: 0.8;
+}
+
+.auth-text {
+  color: var(--color-maroon);
+  cursor: pointer;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;;
+  font-size: 1rem;
+}
+
+.auth-text:hover {
+  opacity: 0.8;
+}
+
+/* modal overlay */
+.auth-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw; height: 100vh;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+/* modal box */
+.auth-popup {
+  background: #fff;
+  border-radius: 12px;
+  padding: 2rem;
+  width: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+}
+
+.auth-title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-family: var(--font-normal);
+  text-align: center;
+  color: var(--color-maroon);
+}
+
+/* forms */
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.auth-input {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-family: var(--font-normal);
+}
+.auth-submit {
+  padding: 0.5rem;
+  background: var(--color-pink);
+  color: var(--color-maroon);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-family: var(--font-normal);
+}
+
+/* divider text */
+.auth-divider {
+  text-align: center;
+  color: #666;
+  font-family: var(--font-normal);
+  font-size: 0.9rem;
+}
+
+/* Google button */
+.auth-button.google {
+  padding: 0.5rem;
+  background-color: var(--color-pink);
+  color: var(--color-maroon);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-family: var(--font-normal);
+}
+.auth-button.google:hover {
+  opacity: 0.9;
+}
+
+/* switch links */
+.auth-switch {
+  text-align: center;
+  font-family: var(--font-normal);
+  color: var(--color-maroon);
+  font-size: 0.9rem;
+}
+.auth-link {
+  background: none;
+  border: none;
+  color: var(--color-maroon);
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 0;
+  font: inherit;
+}
+
+/* close button */
+.auth-close {
+  background: none;
+  border: none;
+  color: gray;
+  font-size: 0.9rem;
+  font-family: var(--font-normal);
+  text-decoration: underline;
+  cursor: pointer;
+  align-self: center;
+  margin-top: 0.5rem;
+}
+
+/* dropdown */
+/* Auth Dropdown Styles */
+.auth-container {
+  position: relative;
+  display: inline-block;
+}
+
+.account-dropdown {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  padding: 8px 0;
+  width: 180px;
+  z-index: 100;
+  animation: fadeIn 0.2s ease;
+}
+
+.dropdown-item {
+  padding: 10px 16px;
+  font-size: 14px;
+  cursor: pointer;
+  color: #333;
+}
+
+.dropdown-item:hover {
+  background: #f5f5f5;
+}
+
+.dropdown-item:last-child {
+  border-top: 1px solid #eee;
+  color: #e74c3c;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.settings-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.settings-modal {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  width: 400px;
+  max-width: 90%;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.settings-modal h2 {
+  margin: 0 0 0.5rem;
+  color: var(--color-maroon);
+  text-align: center;
+}
+
+.settings-modal label {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.settings-modal input {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-top: 0.25rem;
+  width: 80px;
+}
+
+.settings-section {
+  margin: 0.5rem 0;
+}
+
+.settings-btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.change-pwd-btn {
+  background: transparent;
+  color: var(--color-pink);
+  border: 1px solid var(--color-pink);
+}
+
+.settings-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+  margin-top: 0.5rem;
+}
+
+.settings-btn.save {
+  background: var(--color-pink);
+  color: var(--color-maroon);
+}
+
+.settings-btn.cancel {
+  background: #eee;
+  color: #333;
+}
+
+.settings-row {
+  display: grid;
+  grid-template-columns: 100px 1fr auto; 
+  column-gap: 1rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.settings-row-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.settings-label {
+  flex: 1;
+  font-weight: 500;
+  color: var(--color-maroon);
+}
+
+.settings-value {
+  flex: 2;
+  color: #333;
+}
+
+.settings-input {
+  flex: 2;
+  padding: 0.4rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.settings-btn {
+  margin-left: 0.5rem;
+  padding: 0.4rem 0.8rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.settings-btn.edit {
+  background: transparent;
+  color: var(--color-pink);
+  border: 1px solid var(--color-pink);
+}
+
+.settings-btn.small {
+  background: var(--color-pink);
+  color: var(--color-maroon);
+}
+
+.settings-btn.cancel {
+  background: #eee;
+  color: #333;
+}
+
+.pwd-section {
+  display: grid;
+  grid-column: 2 / -1;  
+  row-gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+.pwd-section .settings-input {
+  width: 100%;
+}
+
+.settings-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+

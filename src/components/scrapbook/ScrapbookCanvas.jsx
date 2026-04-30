@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { Rnd } from 'react-rnd';
 
-export default function ScrapbookCanvas({ activeTool, activeColor, elements, setElements, canvasRefInner, selectedBackground }) {
+export default function ScrapbookCanvas({ activeTool, activeColor, elements, setElements, canvasRefInner, selectedBackground, scale = 1 }) {
   const canvasRef = canvasRefInner || useRef(null);
   const [isDrawing, setIsDrawing] = useState(false);
   const [ctx, setCtx] = useState(null);
@@ -50,10 +50,11 @@ export default function ScrapbookCanvas({ activeTool, activeColor, elements, set
 
   const getCoordinates = (e) => {
     if (!canvasRef.current) return { x: 0, y: 0 };
-    // Using offsetX/offsetY for exact 1:1 pointer mapping since canvas size matches CSS size
+    const rect = canvasRef.current.getBoundingClientRect();
+    // Map the actual cursor position to the 450x600 logical canvas pixels
     return {
-      x: e.nativeEvent.offsetX,
-      y: e.nativeEvent.offsetY,
+      x: (e.clientX - rect.left) * (450 / rect.width),
+      y: (e.clientY - rect.top) * (600 / rect.height),
     };
   };
 
@@ -170,14 +171,15 @@ export default function ScrapbookCanvas({ activeTool, activeColor, elements, set
               key={el.id}
               default={{ x: el.x, y: el.y, width: 200, height: 60 }}
               bounds="parent"
+              scale={scale}
               style={{ zIndex: 20 }}
             >
               <div style={{ 
                 width: '100%', height: '100%', cursor: 'grab', 
-                padding: '8px', border: '2px dashed rgba(84, 5, 8, 0.3)', 
+                border: '2px dashed rgba(84, 5, 8, 0.3)', 
                 backgroundColor: 'transparent',
                 borderRadius: '8px',
-                display: 'flex'
+                boxSizing: 'border-box'
               }}>
                 <div
                   contentEditable
@@ -195,18 +197,17 @@ export default function ScrapbookCanvas({ activeTool, activeColor, elements, set
                     cursor: 'text',
                     whiteSpace: 'pre-wrap',
                     wordBreak: 'break-word',
-                    overflowY: 'auto',
+                    overflowY: 'hidden',
                     scrollbarWidth: 'none',
-                    msOverflowStyle: 'none'
+                    msOverflowStyle: 'none',
+                    padding: '8px',
+                    boxSizing: 'border-box',
+                    lineHeight: '1.4',
+                    margin: 0
                   }}
                 >
                   {el.content}
                 </div>
-                <style>{`
-                  div[contenteditable]::-webkit-scrollbar {
-                    display: none;
-                  }
-                `}</style>
               </div>
             </Rnd>
           );
@@ -222,6 +223,7 @@ export default function ScrapbookCanvas({ activeTool, activeColor, elements, set
               key={el.id}
               default={{ x: el.x, y: el.y, width: 150, height: 150 }}
               bounds="parent"
+              scale={scale}
               style={{ zIndex: isSelected ? 30 : 20 }}
               onMouseDown={(e) => e.stopPropagation()}
               onClick={(e) => {
@@ -323,6 +325,7 @@ export default function ScrapbookCanvas({ activeTool, activeColor, elements, set
             minWidth={30}
             minHeight={30}
             bounds="parent"
+            scale={scale}
             style={{ zIndex: 20 }}
           >
             <div style={{

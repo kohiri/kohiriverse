@@ -1,0 +1,86 @@
+@import './styles.css';
+
+body {
+    background-color: transparent;
+    color: #ffbdbe;
+}
+
+.photostrip-container {
+    background-image: url('../../assets/images/photobooth bg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* horizontal centering */
+    justify-content: center; /* vertical centering */
+    /* margin-top: 50px; */
+    width: 100%;
+    height: 100%;
+  }
+
+.text-holder {
+  margin-top: 60px;
+  margin-bottom: 32px;
+  font-family: "title font";
+  color: var(--color-pink);
+  font-size: var(--font-large);
+  text-align: center;
+}
+
+.photos-holders {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  margin-bottom: 40px;
+}
+
+.photo-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 300px;
+  height: 300px;
+  background-color: var(--color-paler-pink);
+  border-radius: 12px;
+  box-sizing: border-box;
+  background-clip: padding-box;
+
+  font-family: var(--font-normal);
+  font-size: 1.2rem;
+  color: #56021f;
+  border: 8px solid var(--color-pink);
+}
+
+.photos {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;    /* cover the box while keeping aspect ratio */
+  border-radius: 12px;  /* optional: match the box's corners */
+}
+
+.upload-button {
+    appearance: none;
+    border: transparent;
+    background: var(--color-pink);
+    outline: none;
+    cursor: pointer;
+    border-radius: 0.5rem;
+    padding: 1rem 1rem;
+    min-width: 200px;
+    text-transform: lowercase;
+    transition: all 0.45s ease-out;
+    position: relative;
+
+    /* for text */
+    font-family: sans-serif;
+    color: var(--color-maroon);
+    font-size: var(--font-small);
+    font-weight: 500;
+}
+  
+.upload-button:hover {
+    transform: scale(1.05)
+  }
