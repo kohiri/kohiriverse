@@ -2,13 +2,14 @@ import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Photobooth.css";
 import "./styles.css"
+import { PhotoData } from "./Photostrip";
 
 const Photobooth: React.FC = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   // three slots for the strip
-  const [photos, setPhotos] = useState<(string | null)[]>([
+  const [photos, setPhotos] = useState<(PhotoData | null)[]>([
     null,
     null,
     null,
@@ -100,7 +101,11 @@ const Photobooth: React.FC = () => {
     const dataUrl = canvas.toDataURL("image/png");
     setPhotos((prev) => {
       const next = [...prev];
-      next[index] = dataUrl;
+      next[index] = {
+        url: dataUrl,
+        scale: 1,
+        offset: { x: 0, y: 0 }
+      };
       return next;
     });
   };
@@ -116,7 +121,7 @@ const Photobooth: React.FC = () => {
           <div key={idx} className="photo-placeholder">
             {photo ? (
               <img
-                src={photo}
+                src={photo.url}
                 alt={`Captured ${idx}`}
                 className="photo-preview"
               />

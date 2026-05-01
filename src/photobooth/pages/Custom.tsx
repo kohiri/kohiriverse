@@ -2,6 +2,7 @@ import React, { useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "./Custom.css";
 import html2canvas from "html2canvas";
+import { PhotoData } from "./Photostrip";
 
 export const bgOptions = [
   { name: "Black", style: { background: "#000" } },
@@ -20,13 +21,67 @@ const filterOptions = [
 const Custom: React.FC = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
-  const photos: string[] = state?.photos ?? [];
+  const [photos, setPhotos] = useState<PhotoData[]>(state?.photos ?? []);
   const comboRef = useRef<HTMLDivElement>(null);
 
   const [bgStyle, setBgStyle] = useState(bgOptions[0].style);
   const [filterStyle, setFilterStyle] = useState("none");
   const [showTimestamp, setShowTimestamp] = useState(false);
   const [caption, setCaption] = useState("");
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+
+  const updatePhotoAdjustment = (key: 'scale' | 'offset', value: any, idx?: number) => {
+    const targetIdx = idx !== undefined ? idx : selectedIndex;
+    if (targetIdx === null) return;
+    const newPhotos = [...photos];
+    if (key === 'offset') {
+      newPhotos[targetIdx] = { 
+        ...newPhotos[targetIdx], 
+        offset: { ...newPhotos[targetIdx].offset, ...value } 
+      };
+    } else {
+      newPhotos[targetIdx] = { ...newPhotos[targetIdx], [key]: value };
+    }
+    setPhotos(newPhotos);
+  };
+
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+
+  const handleMouseDown = (e: React.MouseEvent, idx: number) => {
+    setSelectedIndex(idx);
+    setIsDragging(true);
+    setDragStart({ x: e.clientX, y: e.clientY });
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging || selectedIndex === null) return;
+    const dx = e.clientX - dragStart.x;
+    const dy = e.clientY - dragStart.y;
+    
+    const currentOffset = photos[selectedIndex]?.offset || { x: 0, y: 0 };
+    updatePhotoAdjustment('offset', { 
+      x: currentOffset.x + dx, 
+      y: currentOffset.y + dy 
+    }, selectedIndex);
+    
+    setDragStart({ x: e.clientX, y: e.clientY });
+  };
+
+  const handleMouseUpOrLeave = () => {
+    setIsDragging(false);
+  };
+
+  const handleWheel = (e: React.WheelEvent, idx: number) => {
+    const currentScale = photos[idx]?.scale || 1;
+    const zoomDelta = e.deltaY > 0 ? -0.1 : 0.1; 
+    let newScale = currentScale + zoomDelta;
+    if (newScale < 0.5) newScale = 0.5;
+    if (newScale > 5) newScale = 5;
+    
+    setSelectedIndex(idx);
+    updatePhotoAdjustment('scale', newScale, idx);
+  };
 
 
   const getFormattedDate = (): string => {
@@ -155,6 +210,14 @@ const Custom: React.FC = () => {
           />
         </div>
 
+        <button className="reset-btn" style={{marginTop: "20px"}} onClick={() => {
+          if (selectedIndex !== null) {
+            const newPhotos = [...photos];
+            newPhotos[selectedIndex] = { ...newPhotos[selectedIndex], scale: 1, offset: { x: 0, y: 0 } };
+            setPhotos(newPhotos);
+          }
+        }}>Reset Selected Photo</button>
+
           <button className="print-button" onClick={() => navigate("/photobooth/result", { state: { photos, bgStyle, timestamp, showTimestamp, caption } })}> Print </button>
 
       </div>
@@ -165,16 +228,26 @@ const Custom: React.FC = () => {
         <div ref={comboRef} className="photostrip" style={bgStyle}>
           {photos.map((photo, idx) =>
             photo ? (
-
-              <img
-                key={idx}
-                src={photo}
-                className="result-photo"
-                alt={`Captured ${idx}`}
-                style={{ filter: filterStyle }}
-              />
-
-
+              <div 
+                key={idx} 
+                className={`result-photo-container ${selectedIndex === idx ? 'selected' : ''}`}
+                onMouseDown={(e) => handleMouseDown(e, idx)}
+                onMouseMove={handleMouseMove}
+                onMouseUp={handleMouseUpOrLeave}
+                onMouseLeave={handleMouseUpOrLeave}
+                onWheel={(e) => handleWheel(e, idx)}
+              >
+                <img
+                  src={photo.url}
+                  className="result-photo"
+                  alt={`Captured ${idx}`}
+                  style={{ 
+                    filter: filterStyle,
+                    transform: `scale(${photo.scale}) translate(${photo.offset.x}px, ${photo.offset.y}px)`,
+                    pointerEvents: 'none' /* ensure drag events go to container */
+                  }}
+                />
+              </div>
             ) : (
               <div key={idx} className="result-photo placeholder">
                 Empty

@@ -12,7 +12,7 @@ import ShareIcon from "../../assets/images/share-icon.svg?react";
 
 const Result: React.FC = () => {
   const { state } = useLocation();
-  const photos: string[] = state?.photos ?? [];
+  const photos: any[] = state?.photos ?? [];
   const bgStyle = state?.bgStyle ?? { background: "#000" }; // fallback background
   const timestamp = state?.timestamp ?? "";
   const showTimestamp: boolean = state?.showTimestamp ?? false;
@@ -187,15 +187,7 @@ const Result: React.FC = () => {
         <button onClick={handleShare} style={{ background: "transparent", border: "none", cursor: "pointer" }}>
           <ShareIcon className='share-icon' width={30} height={30} />
         </button>
-        <button
-          className="auth-button"
-          onClick={isAuthenticated ? handleShowDropDown : handleOpenLogin}
-        >
-          <span className="auth-text" onClick={isAuthenticated ? handleShowDropDown : () => navigate('/photobooth/home')}>
-          {isAuthenticated ? accountName : "Log In"}
-        </span>
-        {isAuthenticated && showDropDown && <AccountDropDown />}
-        </button>
+
 
         
       </div>
@@ -203,7 +195,6 @@ const Result: React.FC = () => {
       <div className="main-content-wrapper">
         {/* text */}
         <div style={{display: "flex", flexDirection: "row", alignItems: "center", gap: "10px", padding: "10px"}}>
-          <img src={printIcon} alt="Print Icon" style={{width: "40px", height: "40px", marginTop: "-10px", transform: "rotate(-10deg)"}}/>
           <div style={{ fontFamily: "title font", fontSize: "40px", marginBottom: "10px" }}>Printing ...</div>
         </div>
         {/* photobooth box */}
@@ -218,12 +209,16 @@ const Result: React.FC = () => {
             <div ref={comboRef}className="photostrip-combo" style={bgStyle}>
               {photos.map((photo, index) =>
                 photo ? (
-                  <img
-                    key={index}
-                    src={photo}
-                    alt={`Captured ${index}`}
-                    className="individual-photo"
-                  />
+                  <div key={index} className="individual-photo-container">
+                    <img
+                      src={photo.url}
+                      alt={`Captured ${index}`}
+                      className="individual-photo"
+                      style={{
+                        transform: `scale(${photo.scale}) translate(${photo.offset.x}px, ${photo.offset.y}px)`,
+                      }}
+                    />
+                  </div>
                 ) : (
                   <div key={index} className="individual-photo placeholder">
                     Empty

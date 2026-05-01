@@ -3,7 +3,10 @@
 /* Full‐screen wrapper */
 .result-wrapper {
   height: 100vh;
-  background-color: var(--color-maroon);
+  background-image: url('../../assets/images/photobooth bg.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -59,9 +62,16 @@
   overflow-x: hidden;
 }
 
-.photostrip-combo .individual-photo {
+.individual-photo-container {
   width: 100%;
   aspect-ratio: 4/3;
+  overflow: hidden;
+  position: relative;
+}
+
+.photostrip-combo .individual-photo {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   display: block;
 }

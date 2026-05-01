@@ -2,9 +2,15 @@ import React, { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Photostrip.css';
 
+export interface PhotoData {
+  url: string;
+  scale: number;
+  offset: { x: number; y: number };
+}
+
 function Photostrip() {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [photos, setPhotos] = useState<(string | null)[]>([null, null, null]); // state variable and function to update state
+  const [photos, setPhotos] = useState<(PhotoData | null)[]>([null, null, null]); // state variable and function to update state
   const clickedIndexRef = useRef<number | null>(null);
   const [showingResult, setShowingResult] = useState(false);
 
@@ -16,7 +22,11 @@ function Photostrip() {
     const imageURLs: string = URL.createObjectURL(file);
 
     const updated = [...photos]
-    updated[clickedIndexRef.current] = imageURLs;
+    updated[clickedIndexRef.current] = {
+      url: imageURLs,
+      scale: 1,
+      offset: { x: 0, y: 0 }
+    };
       
     setPhotos(updated);
   }
@@ -43,7 +53,7 @@ function Photostrip() {
       <div className="photos-holders">
         {photos.map((url, index) => (
           <div key={index} className='photo-box' onClick={() => handleClick(index)}>
-            {url ? <img src={url} alt={`uploaded-${index}`} className="photos" /> : index + 1}
+            {url ? <img src={url.url} alt={`uploaded-${index}`} className="photos" /> : index + 1}
           </div>
         ))}
       </div>
