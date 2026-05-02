@@ -122,10 +122,7 @@
 }
 
 .glitch-hover:hover::after {
-  left: -2px;
-  text-shadow: -1px 0 #fff;
-  clip: rect(44px, 450px, 56px, 0);
-  animation: glitch-anim2 5s infinite linear alternate-reverse;
+  display: none;
 }
 
 @keyframes glitch-anim {

@@ -448,7 +448,7 @@ function StudioApp() {
         <div className="top-bar hud-panel">
           <div className="title-container glitch-hover" data-text="CYBER STUDIO">
             <h1>CYBER STUDIO</h1>
-            <div className="subtitle">RETRO FUTURISTIC HUD</div>
+            <div className="subtitle" style={{ letterSpacing: '4px' }}>STUPID SOUND CLUB</div>
           </div>
           <div className="status-indicators">
             <div className="status-box">
