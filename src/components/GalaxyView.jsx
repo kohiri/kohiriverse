@@ -30,6 +30,14 @@ function GalaxyView() {
     }
   }, [selectedStar, navigate])
 
+  // Handle Cyber Studio navigation (Album 9 / star_8)
+  useEffect(() => {
+    if (selectedStar?.id === 'star_8') {
+      navigate('/studio')
+      setSelectedStar(null) // Reset selection
+    }
+  }, [selectedStar, navigate])
+
   const filteredStars = searchQuery.trim() 
     ? galaxyData.filter(star => star.name.toLowerCase().includes(searchQuery.toLowerCase()))
     : []
@@ -144,7 +152,7 @@ function GalaxyView() {
         )}
       </div>
 
-      {selectedStar && selectedStar.id !== 'star_2' && selectedStar.id !== 'star_6' && (
+      {selectedStar && selectedStar.id !== 'star_2' && selectedStar.id !== 'star_6' && selectedStar.id !== 'star_8' && (
         <AlbumModal selectedStar={selectedStar} onClose={() => setSelectedStar(null)} />
       )}
 
