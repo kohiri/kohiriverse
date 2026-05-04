@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect} from "react";
 import "./Result.css";
 import "./styles.css"
 import { href, useLocation, useNavigate } from "react-router-dom";
-import html2canvas from "html2canvas";
+import { toPng } from "html-to-image";
 import HouseIcon from "../../assets/images/house-solid.svg?react";
 import { jsPDF } from "jspdf";
 import { error, time } from "console";
@@ -17,8 +17,17 @@ const Result: React.FC = () => {
   const timestamp = state?.timestamp ?? "";
   const showTimestamp: boolean = state?.showTimestamp ?? false;
   const caption: string = state?.caption ?? "";
+  const frameStyle: string = state?.frameStyle ?? "frame-none";
+  const filterStyle: string = state?.filterStyle ?? "none";
 
   const comboRef = useRef<HTMLDivElement>(null);
+  const [aspectRatios, setAspectRatios] = useState<Record<number, number>>({});
+
+  const handleImageLoad = (idx: number, e: React.SyntheticEvent<HTMLImageElement>) => {
+    const img = e.currentTarget;
+    const ratio = img.naturalWidth / img.naturalHeight;
+    setAspectRatios(prev => ({ ...prev, [idx]: ratio }));
+  };
 
   // return home
   const navigate = useNavigate();
@@ -27,24 +36,24 @@ const Result: React.FC = () => {
   };
 
   // common helper fot download and share
-  const generatePDF = async (): Promise<string> => {
+  const generateImage = async (): Promise<string> => {
     if (!comboRef.current) {
       throw new Error("Nothing to capture");
     }
 
     const el = comboRef.current;
-    const canvas = await html2canvas(el, {
-      backgroundColor: null,
-      scale: 2,
-    })
-    return canvas.toDataURL("image/png");
+    // using html-to-image for better transform support
+    const dataUrl = await toPng(el, {
+      pixelRatio: 2,
+    });
+    return dataUrl;
   }
 
   // download
   const handleDownload = async () => {
     if (!comboRef.current) return;
     try {
-      const imageURL = await generatePDF();
+      const imageURL = await generateImage();
       const link = document.createElement("a");
       link.href = imageURL;
       link.download = "yourphotostrip";
@@ -56,7 +65,7 @@ const Result: React.FC = () => {
   // share 
   const handleShare = async () => {
     try {
-      const dataUrl = await generatePDF();
+      const dataUrl = await generateImage();
       const res  = await fetch(dataUrl);
       const blob = await res.blob();
 
@@ -87,11 +96,7 @@ const Result: React.FC = () => {
       alert("Nothing to save!");
       return;
     };
-    const canvas = await html2canvas(comboRef.current, {
-      width: comboRef.current.offsetWidth, // Get the rendered width
-      height: comboRef.current.offsetHeight,
-    });
-    const imageData = canvas.toDataURL("image/png");
+    const imageData = await generateImage();
     alert("I'm in the handleSaveClick function");
     try {
       const response = await fetch("api/save-photostrip", {
@@ -206,26 +211,38 @@ const Result: React.FC = () => {
           </button>
 
           <div className="photostrip-mask">
-            <div ref={comboRef}className="photostrip-combo" style={bgStyle}>
-              {photos.map((photo, index) =>
-                photo ? (
+            <div ref={comboRef} className={`photostrip-combo ${frameStyle}`} style={bgStyle}>
+              {photos.map((photo, index) => {
+                const ratio = aspectRatios[index] || (4 / 3); 
+                const isWide = ratio > (4 / 3);
+                const baseWidth = isWide ? 'auto' : '100%';
+                const baseHeight = isWide ? '100%' : 'auto';
+
+                return photo ? (
                   <div key={index} className="individual-photo-container">
                     <img
                       src={photo.url}
                       alt={`Captured ${index}`}
                       className="individual-photo"
+                      onLoad={(e) => handleImageLoad(index, e)}
                       style={{
-                        transform: `scale(${photo.scale}) translate(${photo.offset.x}px, ${photo.offset.y}px)`,
+                        filter: filterStyle,
+                        width: baseWidth,
+                        height: baseHeight,
+                        minWidth: isWide ? '0' : '100%',
+                        minHeight: isWide ? '100%' : '0',
+                        transform: `translate(-50%, -50%) scale(${photo.scale}) translate(${photo.offset.x}px, ${photo.offset.y}px)`,
                       }}
                     />
                   </div>
                 ) : (
-                  <div key={index} className="individual-photo placeholder">
-                    Empty
+                  <div key={index} className="individual-photo-container">
+                    <div className="individual-photo placeholder">
+                      Empty
+                    </div>
                   </div>
                 )
-                
-              )}
+              })}
               {(caption || showTimestamp) && (
                 <div className="footer-section">
                   {caption && <div className="caption-display">{caption}</div>}

@@ -5,17 +5,28 @@ import html2canvas from "html2canvas";
 import { PhotoData } from "./Photostrip";
 
 export const bgOptions = [
-  { name: "Black", style: { background: "#000" } },
-  { name: "Pink", style: { background: "#f5cac3" } },
-  { name: "Green", style: { background: "#717744" } },
-  { name: "Beige", style: { background: "#d5bdaf" } },
-  { name: "Red", style: { background: "#90323d" } },
+  { name: "White", style: { background: "#fff", color: "#000" } },
+  { name: "Black", style: { background: "#000", color: "#fff" } },
+  { name: "Pink", style: { background: "#f5cac3", color: "#000" } },
+  { name: "Green", style: { background: "#717744", color: "#fff" } },
+  { name: "Beige", style: { background: "#d5bdaf", color: "#000" } },
+  { name: "Red", style: { background: "#90323d", color: "#fff" } },
 ];
 
 const filterOptions = [
   { name: "None", style: "none", backgroundColor: "#e0e0e0" },
   { name: "B&W", style: "grayscale(100%)", backgroundColor: "linear-gradient(to right, black 50%, white 50%)"   },
-    { name: "Vivid", style: "contrast(120%) saturate(150%)", backgroundColor: "#dbb42c" },
+  { name: "Vivid", style: "contrast(120%) saturate(150%)", backgroundColor: "#dbb42c" },
+  { name: "Hue", style: "hue", backgroundColor: "linear-gradient(to right, red, yellow, green, cyan, blue, magenta, red)" },
+];
+
+const frameOptions = [
+  { name: "1", className: "frame-none" },
+  { name: "2", className: "frame-polaroid-custom" },
+  { name: "3", className: "frame-pbbg1" },
+  { name: "4", className: "frame-pbbg2" },
+  { name: "5", className: "frame-pbbg3" },
+  { name: "6", className: "frame-pbbg4" },
 ];
 
 const Custom: React.FC = () => {
@@ -26,9 +37,12 @@ const Custom: React.FC = () => {
 
   const [bgStyle, setBgStyle] = useState(bgOptions[0].style);
   const [filterStyle, setFilterStyle] = useState("none");
+  const [hueValue, setHueValue] = useState(0);
+  const [frameStyle, setFrameStyle] = useState(frameOptions[0].className);
   const [showTimestamp, setShowTimestamp] = useState(false);
   const [caption, setCaption] = useState("");
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const [aspectRatios, setAspectRatios] = useState<Record<number, number>>({});
 
   const updatePhotoAdjustment = (key: 'scale' | 'offset', value: any, idx?: number) => {
     const targetIdx = idx !== undefined ? idx : selectedIndex;
@@ -43,6 +57,12 @@ const Custom: React.FC = () => {
       newPhotos[targetIdx] = { ...newPhotos[targetIdx], [key]: value };
     }
     setPhotos(newPhotos);
+  };
+
+  const handleImageLoad = (idx: number, e: React.SyntheticEvent<HTMLImageElement>) => {
+    const img = e.currentTarget;
+    const ratio = img.naturalWidth / img.naturalHeight;
+    setAspectRatios(prev => ({ ...prev, [idx]: ratio }));
   };
 
   const [isDragging, setIsDragging] = useState(false);
@@ -141,93 +161,130 @@ const Custom: React.FC = () => {
       <div className="customize-left">
         <div className="text">Decorate ♥</div>
 
-        <div className="bg-section">
-          <label className="bg-label">Background</label>
-          <div className="bg-picker-thumbnails">
-            {bgOptions.map((opt) => {
-              const isActive = bgStyle === opt.style;
-              return (
-                <div
-                  key={opt.name}
-                  className={`bg-thumb ${isActive ? "active" : ""}`}
-                  style={opt.style}
-                  onClick={() => setBgStyle(opt.style)}
-                >
-                  {isActive && <span className="checkmark">✓</span>}
+        <div className="controls-card">
+          <div className="settings-grid">
+            <div className="bg-section">
+              <label className="bg-label">Background Color</label>
+              <div className="bg-picker-thumbnails">
+                {bgOptions.map((opt) => {
+                  const isActive = bgStyle === opt.style;
+                  return (
+                    <div
+                      key={opt.name}
+                      className={`bg-thumb ${isActive ? "active" : ""}`}
+                      style={opt.style}
+                      onClick={() => setBgStyle(opt.style)}
+                    >
+                      {isActive && <span className="checkmark">✓</span>}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="frame-section">
+              <label className="bg-label">Select Frame</label>
+              <div className="bg-picker-thumbnails">
+                {frameOptions.map((opt) => (
+                  <div
+                    key={opt.name}
+                    className={`frame-thumb ${frameStyle === opt.className ? "active" : ""}`}
+                    onClick={() => setFrameStyle(opt.className)}
+                  >
+                    {opt.name}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="filter-section">
+              <label className="bg-label">Photo Filter</label>
+              <div className="bg-picker-thumbnails">
+                {filterOptions.map((opt) => {
+                  const isActive = filterStyle === opt.style;
+                  const isBW = opt.name === "Black & White";
+                  return (
+                    <div
+                      key={opt.name}
+                      className={`bg-thumb ${isActive ? "active" : ""} ${isBW ? "bw-thumb" : ""}`}
+                      style={{
+                        background: opt.backgroundColor,
+                      }}
+                      onClick={() => setFilterStyle(opt.style)}
+                    >
+                        {isActive && <span className="checkmark">✓</span>}
+                    </div>
+                  );
+                })}
+              </div>
+              {filterStyle === "hue" && (
+                <div style={{ width: "100%", marginTop: "10px" }}>
+                  <label className="bg-label" style={{ fontSize: "12px" }}>Adjust Hue: {hueValue}°</label>
+                  <input
+                    type="range"
+                    min="0"
+                    max="360"
+                    value={hueValue}
+                    onChange={(e) => setHueValue(Number(e.target.value))}
+                    style={{ width: "100%", accentColor: "var(--color-pink)" }}
+                  />
                 </div>
-              );
-            })}
+              )}
+            </div>
+
+            <div className="toggle-section">
+              <label className="bg-label">Show Timestamp</label>
+              <label className="toggle-label">
+                <input
+                  type="checkbox"
+                  checked={showTimestamp}
+                  onChange={() => setShowTimestamp(!showTimestamp)}
+              />
+              <span className="toggle-slider" />
+              </label>
+            </div>
           </div>
-        </div>
-
-
-        <div className="filter-section">
-          <label className="bg-label">Filter</label>
-          <div className="bg-picker-thumbnails">
-            {filterOptions.map((opt) => {
-              const isActive = filterStyle === opt.style;
-              const isBW = opt.name === "Black & White";
-              return (
-                <div
-                  key={opt.name}
-                  className={`bg-thumb ${isActive ? "active" : ""} ${isBW ? "bw-thumb" : ""}`}
-                  style={{
-                    background: opt.backgroundColor,
-                  }}
-                  onClick={() => setFilterStyle(opt.style)}
-                >
-                    {isActive && <span className="checkmark">✓</span>}
-                </div>
-              );
-            })}
-          </div>
-
-
-
         </div>
             
-        <div className="toggle-section">
-          <label className="bg-label">Timestamp</label>
-          <label className="toggle-label">
+        <div className="controls-card">
+          <div className="caption-section">
+            <label className="bg-label">Custom Caption</label>
             <input
-              type="checkbox"
-              checked={showTimestamp}
-              onChange={() => setShowTimestamp(!showTimestamp)}
-          />
-          <span className="toggle-slider" />
-          </label>
+              type="text"
+              value={caption}
+              onChange={e => setCaption(e.target.value)}
+              maxLength={22}
+              placeholder="Your text here..."
+              className="caption-input"
+            />
+          </div>
         </div>
 
-        <div className="caption-section">
-          <label className="bg-label">Caption</label>
-          <input
-            type="text"
-            value={caption}
-            onChange={e => setCaption(e.target.value)}
-            maxLength={22}
-            placeholder="Write something here..."
-            className="caption-input"
-          />
+        <div className="action-buttons">
+          <button className="reset-btn" onClick={() => {
+            if (selectedIndex !== null) {
+              const newPhotos = [...photos];
+              newPhotos[selectedIndex] = { ...newPhotos[selectedIndex], scale: 1, offset: { x: 0, y: 0 } };
+              setPhotos(newPhotos);
+            }
+          }}>Reset Selected Photo</button>
+
+          <button className="print-button" onClick={() => navigate("/photobooth/result", { state: { photos, bgStyle, timestamp, showTimestamp, caption, frameStyle, filterStyle: filterStyle === 'hue' ? `hue-rotate(${hueValue}deg)` : filterStyle } })}> Print </button>
         </div>
-
-        <button className="reset-btn" style={{marginTop: "20px"}} onClick={() => {
-          if (selectedIndex !== null) {
-            const newPhotos = [...photos];
-            newPhotos[selectedIndex] = { ...newPhotos[selectedIndex], scale: 1, offset: { x: 0, y: 0 } };
-            setPhotos(newPhotos);
-          }
-        }}>Reset Selected Photo</button>
-
-          <button className="print-button" onClick={() => navigate("/photobooth/result", { state: { photos, bgStyle, timestamp, showTimestamp, caption } })}> Print </button>
 
       </div>
 
 
       {/* Right Side */}
       <div className="customize-right">
-        <div ref={comboRef} className="photostrip" style={bgStyle}>
-          {photos.map((photo, idx) =>
-            photo ? (
+        <div ref={comboRef} className={`photostrip ${frameStyle}`} style={bgStyle}>
+          {photos.map((photo, idx) => {
+            const ratio = aspectRatios[idx] || (4 / 3); // default to 4:3 before load
+            const isWide = ratio > (4 / 3);
+            const baseWidth = isWide ? 'auto' : '100%';
+            const baseHeight = isWide ? '100%' : 'auto';
+
+            return photo ? (
               <div 
                 key={idx} 
                 className={`result-photo-container ${selectedIndex === idx ? 'selected' : ''}`}
@@ -241,19 +298,26 @@ const Custom: React.FC = () => {
                   src={photo.url}
                   className="result-photo"
                   alt={`Captured ${idx}`}
+                  onLoad={(e) => handleImageLoad(idx, e)}
                   style={{ 
-                    filter: filterStyle,
-                    transform: `scale(${photo.scale}) translate(${photo.offset.x}px, ${photo.offset.y}px)`,
+                    filter: filterStyle === 'hue' ? `hue-rotate(${hueValue}deg)` : filterStyle,
+                    width: baseWidth,
+                    height: baseHeight,
+                    minWidth: isWide ? '0' : '100%',
+                    minHeight: isWide ? '100%' : '0',
+                    transform: `translate(-50%, -50%) scale(${photo.scale}) translate(${photo.offset.x}px, ${photo.offset.y}px)`,
                     pointerEvents: 'none' /* ensure drag events go to container */
                   }}
                 />
               </div>
             ) : (
-              <div key={idx} className="result-photo placeholder">
-                Empty
+              <div key={idx} className="result-photo-container">
+                <div className="result-photo placeholder">
+                  Empty
+                </div>
               </div>
             )
-          )}
+          })}
         {(caption || showTimestamp) && (
           <div className="footer-section">
             {caption && <div className="caption-display">{caption}</div>}

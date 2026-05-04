@@ -120,6 +120,9 @@ export default function GalaxyCanvas({
             {/* Deep Space Background */}
             <CustomStarfield count={25000} maxDistance={600} />
 
+            {/* 3D Shooting Stars */}
+            <ShootingStars />
+
             {/* Zodiac Constellations */}
             <Constellation
               name="Gemini"
@@ -142,17 +145,55 @@ export default function GalaxyCanvas({
 
 
 
-            {/* Distant Galaxies */}
-            <DistantGalaxy position={[-50, -25, -100]} />
+            {/* Distant Galaxies - Distributed in a 360-degree sphere (Radius ~500-600) */}
+            
+            {/* 1. Orange-Blue Galaxy (Back-Left) */}
+            <DistantGalaxy 
+              position={[-450, -150, -300]} 
+              rotation={[0.5, 1.2, 0.3]}
+              scale={[15, 15, 15]}
+            />
+
+            {/* 2. Green-Blue Galaxy (Front-Right) */}
             <DistantGalaxy
-              position={[30, 20, 15]}
-              rotation={[-Math.PI * 0.15, Math.PI * 0.8, -Math.PI * 0.05]}
+              position={[400, 250, 400]}
+              rotation={[-0.8, -0.5, 1.1]}
               insideColor="#52d025"
               outsideColor="#13099a"
               count={30000}
               branches={4}
               radius={5}
-              scale={[2.5, 2.5, 2.5]}
+              scale={[18, 18, 18]}
+            />
+
+            {/* 3. Supernova Pink Galaxy (Back-Right) */}
+            <DistantGalaxy
+              position={[500, -200, -400]}
+              rotation={[Math.PI * 0.4, 0.2, 0.5]}
+              insideColor="#ff00ff"
+              outsideColor="#4b0082"
+              branches={3}
+              scale={[20, 20, 20]}
+            />
+
+            {/* 4. Frozen Cyan Galaxy (Front-Left) */}
+            <DistantGalaxy
+              position={[-400, 350, 350]}
+              rotation={[-0.2, Math.PI * 0.3, 0.8]}
+              insideColor="#00ffff"
+              outsideColor="#708090"
+              branches={6}
+              scale={[16, 16, 16]}
+            />
+
+            {/* 5. Molten Gold Galaxy (Bottom-Front) */}
+            <DistantGalaxy
+              position={[50, -500, 450]}
+              rotation={[Math.PI * 0.1, -0.4, -0.2]}
+              insideColor="#ff4500"
+              outsideColor="#ffd700"
+              branches={2}
+              scale={[22, 22, 22]}
             />
           </>
         )}

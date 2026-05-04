@@ -51,22 +51,6 @@ function GalaxyView() {
         preload="auto"
       />
 
-      {/* CSS Shooting Stars */}
-      {selectedStar?.id !== 'star_2' && (
-        <section className="css-shooting-stars">
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-        </section>
-      )}
-
       {/* 3D Canvas Layer */}
       {selectedStar?.id !== 'star_2' && (
         <GalaxyCanvas

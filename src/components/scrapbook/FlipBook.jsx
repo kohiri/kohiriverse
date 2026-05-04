@@ -59,7 +59,7 @@ export default function FlipBook({ pages, onAddPage }) {
         {/* Back Cover */}
         <div className="page page-cover page-cover-bottom" data-density="hard">
           <div className="page-content" style={{ width: '100%', height: '100%' }}>
-            <img src="/back.png" alt="Back Cover" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            <img src="/coverpage.jpg" alt="Back Cover" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
           </div>
         </div>
       </HTMLFlipBook>

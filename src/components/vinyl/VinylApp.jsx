@@ -31,7 +31,7 @@ export default function VinylApp({ onBack }) {
       </button>
 
       <div className="app-container relative min-h-screen p-[4rem_2rem] flex flex-col items-center">
-        <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 0 }}>
+        <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', zIndex: 0 }}>
           <LiquidEther
             colors={['#5227FF', '#FF9FFC', '#B497CF']}
             mouseForce={20}

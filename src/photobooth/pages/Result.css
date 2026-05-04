@@ -70,11 +70,59 @@
 }
 
 .photostrip-combo .individual-photo {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  position: absolute;
+  top: 50%;
+  left: 50%;
   display: block;
 }
+
+/* Photostrip Frames */
+.photostrip-combo.frame-none {
+  border: none;
+}
+
+.photostrip-combo.frame-polaroid-custom {
+  background-image: url('/photobooth.jpg') !important;
+  background-size: cover;
+  background-position: center;
+  padding: 30px 20px 80px 20px !important;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  border-radius: 4px;
+}
+.photostrip-combo.frame-polaroid-custom .individual-photo-container {
+  border-radius: 2px;
+}
+
+.photostrip-combo.frame-pbbg1 {
+  background-image: url('/pbbg1.png') !important;
+  background-size: 100% 100% !important;
+  background-position: center;
+  padding: 30px 25px !important;
+  border-radius: 4px;
+}
+.photostrip-combo.frame-pbbg2 {
+  background-image: url('/pbbg2.png') !important;
+  background-size: 100% 100% !important;
+  background-position: center;
+  padding: 30px 25px !important;
+  border-radius: 4px;
+}
+.photostrip-combo.frame-pbbg3 {
+  background-image: url('/pbbg3.png') !important;
+  background-size: 100% 100% !important;
+  background-position: center;
+  padding: 30px 25px !important;
+  border-radius: 4px;
+}
+.photostrip-combo.frame-pbbg4 {
+  background-image: url('/pbbg4.png') !important;
+  background-size: 100% 100% !important;
+  background-position: center;
+  padding: 30px 25px !important;
+  border-radius: 4px;
+}
+
+
 
 /* placeholder (empty) styling */
 .photostrip-combo .individual-photo.placeholder {
@@ -85,6 +133,11 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }
 
 .caption-display {
