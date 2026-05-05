@@ -44,6 +44,47 @@ And it's not just about kids either. We all do this, just in more subtle ways. W
 
 Reference:
 Albert Bandura, Ross, D., & Ross, S. A. (1961). Transmission of aggression through imitation of aggressive models. Journal of Abnormal and Social Psychology.`
+  },
+  {
+    id: 9,
+    title: 'Non-Suicidal Self-Injury (NSSI)',
+    image: '/assets/headspace/nssi1.jpeg',
+    desc: 'Often misread as attention-seeking — but research tells a very different story about pain, numbness, and emotional survival.',
+    content: `Non-Suicidal Self-Injury (NSSI) is often misunderstood as attention-seeking, but psychological research frames it as a maladaptive coping strategy used to manage overwhelming internal states. Defined within the Diagnostic and Statistical Manual of Mental Disorders (DSM-5-TR), NSSI involves deliberate harm to one's body without suicidal intent, serving functions that are deeply tied to emotional regulation rather than a desire to die.
+
+One of the most consistent findings in research is the paradoxical role of pain. According to affect regulation models, individuals engage in NSSI to reduce intense negative emotions or to feel something in states of numbness. This is supported by experimental and self-report studies showing a temporary sense of relief or release following the act, reinforcing the behavior over time.
+
+A more nuanced understanding comes from the biosocial framework developed by Marsha M. Linehan, which highlights the role of invalidating environments. When individuals grow up in contexts where their emotional experiences are minimized or dismissed, they may struggle to develop healthy regulation strategies. In such cases, self-injury can emerge as a private and embodied way of expressing distress—one that does not rely on being understood by others.
+
+Although NSSI is distinct from suicidal behavior in intent, it remains clinically significant. Longitudinal research shows that it is a strong predictor of future suicidal ideation and attempts, emphasizing the need to view it as a meaningful psychological signal rather than an isolated behavior.
+
+Ultimately, NSSI reflects not a desire to die, but a difficulty in finding safer ways to cope with emotional intensity. Understanding it through a research-informed lens allows for responses grounded in empathy, rather than misconception.
+
+References:
+Nock, M. K., & Prinstein, M. J. (2004). A functional approach to the assessment of self-mutilative behavior. Journal of Consulting and Clinical Psychology.
+Klonsky, E. D. (2007). The functions of deliberate self-injury: A review of the evidence. Clinical Psychology Review.
+Wilkinson, P., Kelvin, R., Roberts, C., Dubicka, B., & Goodyer, I. (2011). Clinical and psychosocial predictors of suicide attempts in adolescents. American Journal of Psychiatry.`
+  },
+  {
+    id: 10,
+    title: 'Need for Noise',
+    image: '/assets/headspace/noise.jpeg',
+    desc: 'Why silence feels unbearable for some — and what your need for background sound says about your inner world.',
+    content: `In an increasingly connected world, many individuals find themselves unable to sit in silence. Whether it is the quiet hum of a television, the familiar rhythm of music, or the passive scrolling of a phone, background stimulation has become a subtle but powerful tool for emotional regulation. When this stimulation is absent, some individuals report feelings of restlessness, discomfort, or even anxiety—suggesting that the presence of "noise" is not merely a habit, but a psychological need.
+
+From a research perspective, this pattern can be understood through the lens of self-regulation and attentional control. Continuous low-level stimulation helps occupy cognitive space, reducing the intensity of intrusive thoughts or uncomfortable emotions. In this sense, screens and background sounds act as a form of experiential avoidance, a concept explored in approaches like Acceptance and Commitment Therapy. Rather than directly confronting internal experiences, individuals may turn to external input to soften or distract from them.
+
+Neuroscientific insights further deepen this understanding. The brain's Default Mode Network—active during rest and introspection—is closely linked to mind-wandering and self-referential thinking. For individuals prone to anxiety or overthinking, this network can become overactive in moments of silence. Background noise or screen engagement can temporarily suppress this activity, creating a sense of mental quiet through external stimulation rather than internal regulation.
+
+There is also a behavioral reinforcement loop at play. Digital platforms, particularly those designed by companies like TikTok or YouTube, are structured around rapid, engaging content that delivers consistent dopamine-driven rewards. Over time, the brain begins to associate constant input with comfort and relief. Silence, by contrast, may feel unfamiliar or even distressing—not because it is inherently negative, but because it lacks the stimulation the brain has adapted to expect.
+
+Importantly, this reliance on background stimulation is not inherently pathological. For many, it is a functional coping mechanism, especially in environments that demand constant productivity or where emotional processing has limited space. However, when the absence of stimulation leads to significant anxiety or an inability to self-soothe, it may indicate a deeper difficulty with emotional tolerance and internal regulation.
+
+In this way, the need for screens or sound is less about distraction and more about regulation through external means. It reflects a shift in how individuals manage their inner worlds—outsourcing calm, focus, and comfort to the steady presence of digital or auditory input.
+
+References:
+Hayes, S. C., Wilson, K. G., Gifford, E. V., Follette, V. M., & Strosahl, K. (1996). Experiential avoidance and behavioral disorders: A functional dimensional approach. Journal of Consulting and Clinical Psychology.
+Raichle, M. E. (2015). The brain's default mode network. Annual Review of Neuroscience.`
   }
 ];
 
