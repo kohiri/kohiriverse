@@ -38,6 +38,14 @@ function GalaxyView() {
     }
   }, [selectedStar, navigate])
 
+  // Handle Headspace navigation (Album 8 / star_7)
+  useEffect(() => {
+    if (selectedStar?.id === 'star_7') {
+      navigate('/headspace')
+      setSelectedStar(null)
+    }
+  }, [selectedStar, navigate])
+
   const filteredStars = searchQuery.trim() 
     ? galaxyData.filter(star => star.name.toLowerCase().includes(searchQuery.toLowerCase()))
     : []
@@ -136,7 +144,7 @@ function GalaxyView() {
         )}
       </div>
 
-      {selectedStar && selectedStar.id !== 'star_2' && selectedStar.id !== 'star_6' && selectedStar.id !== 'star_8' && (
+      {selectedStar && selectedStar.id !== 'star_2' && selectedStar.id !== 'star_6' && selectedStar.id !== 'star_7' && selectedStar.id !== 'star_8' && (
         <AlbumModal selectedStar={selectedStar} onClose={() => setSelectedStar(null)} />
       )}
 
