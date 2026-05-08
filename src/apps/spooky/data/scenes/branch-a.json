@@ -1,0 +1,19 @@
+{
+  "id": "branch-a",
+  "title": "The Static Room",
+  "text": "You lean closer to the screen. The static intensifies, shaping into a dim silhouette. It reaches out, and the room drops in temperature.",
+  "choices": [
+    {
+      "id": "touch",
+      "label": "Reach out to it",
+      "next": "ending-1",
+      "effects": { "connection": 1 }
+    },
+    {
+      "id": "pull_back",
+      "label": "Step back into the dark",
+      "next": "ending-2",
+      "effects": { "isolation": 1 }
+    }
+  ]
+}

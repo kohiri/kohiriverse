@@ -1,0 +1,20 @@
+{
+  "id": "scene5",
+  "title": "The Tallies",
+  "text": "The floor creaks. The room is freezing and almost empty—just a table, a chair, and lines carved into the wall. Not random. Tallies.\n\nGrouped. Counted.\n\nOne group. Five lines. Another. Five. Another... Your eyes drift lower. The last set is unfinished. Four lines. Just four. You feel it then. A quiet, creeping awareness.",
+  "image": "/assets/tallies.png",
+  "choices": [
+    {
+      "id": "freeze",
+      "label": "Stand frozen in dread",
+      "next": "ending-bad",
+      "effects": {}
+    },
+    {
+      "id": "react",
+      "label": "Turn around immediately",
+      "next": "ending-check",
+      "effects": {}
+    }
+  ]
+}

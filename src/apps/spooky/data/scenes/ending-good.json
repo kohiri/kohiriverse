@@ -1,0 +1,8 @@
+{
+  "id": "ending-good",
+  "title": "The Broken Count",
+  "text": "Because you remained cautious, your hand was already on the doorframe. As the unseen weight shifts behind you, you don't freeze. You pull the door violently, shattering the deadbolt lock, and throw yourself into the black forest.\n\nYou run until your lungs burn. The path is gone. You survive.\n\nBut the tallies remain unfinished. And it is still waiting for the fifth.",
+  "image": "/assets/path.png",
+  "ending": true,
+  "endingMessage": "SECRET ENDING: ESCAPED. THE COUNT REMAINS FOUR."
+}

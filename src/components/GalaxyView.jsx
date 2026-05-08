@@ -46,6 +46,14 @@ function GalaxyView() {
     }
   }, [selectedStar, navigate])
 
+  // Handle Spooky navigation (Album 12 / star_11)
+  useEffect(() => {
+    if (selectedStar?.id === 'star_11') {
+      navigate('/spooky')
+      setSelectedStar(null)
+    }
+  }, [selectedStar, navigate])
+
   const filteredStars = searchQuery.trim() 
     ? galaxyData.filter(star => star.name.toLowerCase().includes(searchQuery.toLowerCase()))
     : []
@@ -144,7 +152,7 @@ function GalaxyView() {
         )}
       </div>
 
-      {selectedStar && selectedStar.id !== 'star_2' && selectedStar.id !== 'star_6' && selectedStar.id !== 'star_7' && selectedStar.id !== 'star_8' && (
+      {selectedStar && selectedStar.id !== 'star_2' && selectedStar.id !== 'star_6' && selectedStar.id !== 'star_7' && selectedStar.id !== 'star_8' && selectedStar.id !== 'star_11' && (
         <AlbumModal selectedStar={selectedStar} onClose={() => setSelectedStar(null)} />
       )}
 

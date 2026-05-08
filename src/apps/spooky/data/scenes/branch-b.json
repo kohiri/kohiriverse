@@ -1,0 +1,19 @@
+{
+  "id": "branch-b",
+  "title": "The Silent Dark",
+  "text": "You reach for the power button. It clicks, but the screen doesn't turn off. Instead, the pale blue glow shifts to a deep, mesmerizing purple. The room feels empty, yet you are not alone.",
+  "choices": [
+    {
+      "id": "stare",
+      "label": "Stare into the purple abyss",
+      "next": "ending-3",
+      "effects": { "madness": 1 }
+    },
+    {
+      "id": "run",
+      "label": "Leave the room immediately",
+      "next": "ending-4",
+      "effects": { "escape": 1 }
+    }
+  ]
+}

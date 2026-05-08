@@ -1,0 +1,20 @@
+{
+  "id": "scene3",
+  "title": "Eye Level",
+  "text": "The path doesn’t twist or branch. It goes unnaturally straight, carved with terrifying intention. The trees on either side grow taller, their trunks almost black. You notice marks on them—thin cuts, all at the same height. At your eye level. You reach out. They are fresh.\n\nA sudden crack echoes deep in the forest. You turn. Nothing.",
+  "image": "/assets/marked_trees.png",
+  "choices": [
+    {
+      "id": "run",
+      "label": "Walk faster, panic setting in",
+      "next": "scene4",
+      "effects": { "panic": 1 }
+    },
+    {
+      "id": "tread_lightly",
+      "label": "Move silently, staying hyper-aware",
+      "next": "scene4",
+      "effects": { "caution": 1 }
+    }
+  ]
+}

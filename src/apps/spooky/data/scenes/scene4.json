@@ -1,0 +1,20 @@
+{
+  "id": "scene4",
+  "title": "It Shouldn't Be Here",
+  "text": "The cuts appear more frequently, closer together, like whoever made them was panicking. Then they stop.\n\nAhead of you, the path ends at a small wooden cabin. No smoke. No sound. Just a structure sitting too still, belonging to the forest but foreign to it. The door is slightly open. You tell yourself not to go inside.",
+  "image": "/assets/cabin.png",
+  "choices": [
+    {
+      "id": "enter_blindly",
+      "label": "Step forward and push the door wide open",
+      "next": "scene5",
+      "effects": { "foolish": 1 }
+    },
+    {
+      "id": "peer",
+      "label": "Peer through the crack before entering",
+      "next": "scene5",
+      "effects": { "caution": 1 }
+    }
+  ]
+}

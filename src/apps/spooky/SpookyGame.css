@@ -1,0 +1,460 @@
+/* --------------------------------------------------------------
+   Spooky / Number Five — CRT TV Horror Game (Galaxy-scoped)
+   All class names prefixed with "spooky-" for isolation.
+   -------------------------------------------------------------- */
+
+/* Design tokens (scoped) */
+.spooky-tv-wrapper {
+  --spooky-color-bg-dark: #01010a;
+  --spooky-color-accent-red: #ff3131;
+  --spooky-color-accent-crimson: #d10000;
+  --spooky-color-text-primary: #c0c0d1;
+  --spooky-font-base: 'Courier New', Courier, monospace;
+}
+
+/* ── Room / Background ─────────────────────────────────────── */
+.spooky-tv-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  width: 100vw;
+  background-image:
+    radial-gradient(ellipse at center, rgba(10, 10, 15, 0.1) 0%, rgba(0, 0, 0, 0.85) 60%, rgba(0, 0, 0, 0.98) 100%),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.8) 0%, transparent 50%),
+    url('/wall 2.jpg');
+  background-color: #030303;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+  overflow: hidden;
+  font-family: var(--spooky-font-base);
+}
+
+/* Grain overlay on the room — uses CSS only, no image */
+.spooky-tv-wrapper::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: none;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Ambient CRT glow bleeding onto the walls */
+.spooky-tv-wrapper::after {
+  content: "";
+  position: absolute;
+  width: 70vw;
+  height: 70vh;
+  background: radial-gradient(circle at 42% 50%, rgba(185, 100, 100, 0.18) 0%, rgba(100, 40, 40, 0.06) 50%, transparent 75%);
+  filter: blur(100px);
+  z-index: 0;
+  pointer-events: none;
+  animation: spookyAmbientGlow 3.5s infinite alternate ease-in-out;
+}
+
+@keyframes spookyAmbientGlow {
+  0%   { opacity: 0.7; transform: scale(1); }
+  100% { opacity: 1;   transform: scale(1.04); }
+}
+
+/* ── Back to Galaxy Button ───────────────────────────────────── */
+.spooky-back-btn {
+  position: absolute;
+  top: 1.2rem;
+  left: 1.2rem;
+  z-index: 200;
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.55);
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  padding: 0.5rem 1.2rem;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(8px);
+}
+
+.spooky-back-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.9);
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+/* ── TV Container ────────────────────────────────────────────── */
+.spooky-tv-container {
+  position: relative;
+  height: 130vh;
+  aspect-ratio: 735 / 752;
+  margin-top: -15vh;
+  z-index: 2;
+  filter:
+    drop-shadow(0 0 40px rgba(170, 90, 90, 0.22))
+    drop-shadow(0 40px 60px rgba(0, 0, 0, 0.95));
+}
+
+/* ── Game Viewport ───────────────────────────────────────────── */
+.spooky-tv-screen {
+  position: absolute;
+  left: 8%;
+  top: 23%;
+  width: 66%;
+  height: 48%;
+  background: #020509;
+  border-radius: 5% / 7%;
+  overflow: hidden;
+  box-shadow:
+    inset 0 0 60px rgba(0, 0, 0, 0.95),
+    inset 0 0 20px rgba(0, 0, 0, 0.7),
+    0 0 35px rgba(160, 80, 80, 0.35),
+    0 0 8px  rgba(160, 80, 80, 0.5);
+}
+
+/* Glass glare */
+.spooky-tv-screen::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0.045) 0%,
+    rgba(255, 255, 255, 0.01) 25%,
+    transparent 50%
+  );
+  pointer-events: none;
+  z-index: 30;
+}
+
+/* Screen vignette */
+.spooky-tv-screen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 45%, rgba(0, 0, 0, 0.75) 100%);
+  pointer-events: none;
+  z-index: 28;
+}
+
+/* ── TV Rim Overlay ──────────────────────────────────────────── */
+.spooky-tv-rim-overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  filter: brightness(0.45) contrast(1.1);
+  z-index: 100;
+}
+
+/* ── Scene Background Image ──────────────────────────────────── */
+.spooky-scene-image-bg {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.35;
+  filter: grayscale(100%) contrast(1.2) sepia(100%) hue-rotate(180deg) brightness(0.6);
+  mix-blend-mode: screen;
+  z-index: 2;
+}
+
+/* ── CRT Scanlines & Vignette ────────────────────────────────── */
+.spooky-crt-effects {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 15;
+  mix-blend-mode: overlay;
+}
+
+.spooky-crt-effects::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.28) 50%);
+  background-size: 100% 4px;
+}
+
+.spooky-crt-effects::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 35%, rgba(0, 0, 0, 0.85) 100%);
+  box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.9);
+}
+
+/* ── Grain / Noise Layer ─────────────────────────────────────── */
+.spooky-glitch-layer {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  /* Pure CSS static noise via repeating gradient — no image needed */
+  background-image: repeating-linear-gradient(
+    0deg,
+    rgba(255,255,255,0.015) 0px,
+    rgba(255,255,255,0.015) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  opacity: 0.6;
+  pointer-events: none;
+  z-index: 12;
+  animation: spookyStaticNoise 0.18s steps(2) infinite;
+}
+
+@keyframes spookyStaticNoise {
+  0%   { background-position: 0 0; }
+  100% { background-position: 100% 100%; }
+}
+
+/* ── Horizontal glitch bar ───────────────────────────────────── */
+.spooky-glitch-bar {
+  position: absolute;
+  top: -10%;
+  left: 0;
+  width: 100%;
+  height: 4%;
+  background: rgba(255, 255, 255, 0.04);
+  z-index: 13;
+  pointer-events: none;
+  animation: spookyScanlineDrop 7s linear infinite;
+  mix-blend-mode: difference;
+}
+
+@keyframes spookyScanlineDrop {
+  0%   { top: -10%; }
+  100% { top: 110%; }
+}
+
+/* ── Animations ──────────────────────────────────────────────── */
+.spooky-fade-in {
+  animation: spookyFadeIn 2.5s ease-out forwards;
+}
+
+@keyframes spookyFadeIn {
+  0%   { opacity: 0; filter: blur(6px); }
+  100% { opacity: 1; filter: blur(0px); }
+}
+
+.spooky-sentence-fade {
+  display: inline;
+  opacity: 0;
+  animation: spookySentenceReveal 1.2s ease-out forwards;
+}
+
+@keyframes spookySentenceReveal {
+  0%   { opacity: 0; transform: translateY(5px); filter: blur(2px); }
+  100% { opacity: 1; transform: translateY(0);   filter: blur(0); }
+}
+
+@keyframes spookyTextFlicker {
+  0%   { opacity: 0.94; }
+  50%  { opacity: 1; }
+  100% { opacity: 0.91; }
+}
+
+@keyframes spookySlightGlitch {
+  0%   { transform: translate(0) skew(0deg); }
+  20%  { transform: translate(-2px, 1px) skew(-2deg); }
+  21%  { transform: translate(0) skew(0deg); }
+  60%  { transform: translate(2px, -1px) skew(1deg); }
+  61%  { transform: translate(0) skew(0deg); }
+  100% { transform: translate(0) skew(0deg); }
+}
+
+/* ── Start Screen ────────────────────────────────────────────── */
+.spooky-start-screen {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  text-align: center;
+  color: var(--spooky-color-accent-crimson);
+  font-family: var(--spooky-font-base);
+  text-shadow: 0 0 10px var(--spooky-color-accent-crimson), 0 0 20px rgba(255, 0, 0, 0.4);
+  animation: spookySlightGlitch 3s infinite;
+  padding: 8%;
+}
+
+/* ── Scene Content ───────────────────────────────────────────── */
+.spooky-scene-content {
+  font-family: 'Courier New', Courier, monospace;
+  color: var(--spooky-color-text-primary);
+  padding: 6%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  z-index: 5;
+}
+
+.spooky-scene-content.spooky-clickable {
+  cursor: pointer;
+}
+
+/* ── Typography ──────────────────────────────────────────────── */
+.spooky-scene-text {
+  font-size: clamp(1rem, 1.8vw, 1.5rem);
+  color: #d1d1e0;
+  margin-bottom: 2rem;
+  line-height: 1.7;
+  max-width: 98%;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 1.5rem 1.8rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  min-height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  animation: spookyTextFlicker 0.15s infinite;
+  text-shadow:
+    1px 0 1px rgba(255, 0, 0, 0.5),
+    -1px 0 1px rgba(0, 255, 255, 0.5),
+    0 0 6px rgba(0, 0, 0, 0.9);
+}
+
+/* ── Choices ─────────────────────────────────────────────────── */
+.spooky-choices-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.spooky-end-title {
+  font-size: clamp(2rem, 5vw, 4.5rem);
+  color: #ff1a1a;
+  text-transform: uppercase;
+  letter-spacing: 12px;
+  margin-bottom: 2rem;
+  font-weight: 900;
+  text-align: center;
+  text-shadow: 4px 4px 0px rgba(0, 0, 0, 0.9);
+  animation: spookySlightGlitch 2s infinite;
+}
+
+.spooky-choice-prompt {
+  font-size: clamp(1rem, 2.2vw, 1.8rem);
+  color: #ff1a1a;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  margin-bottom: 2rem;
+  font-weight: 900;
+  text-align: center;
+  text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.8);
+}
+
+.spooky-choices-list {
+  list-style: none;
+  margin: 0 auto;
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 6px;
+  width: 90%;
+  max-width: 400px;
+}
+
+.spooky-choice-item {
+  padding: 0.7rem 1.2rem;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: #9a9ab2;
+  font-size: clamp(0.65rem, 1.1vw, 0.95rem);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-align: center;
+}
+
+.spooky-choice-item:hover,
+.spooky-choice-item.spooky-focused {
+  background: rgba(255, 0, 0, 0.2);
+  color: #ff1a1a;
+  border-color: rgba(255, 0, 0, 0.6);
+  border-bottom: 2px solid #ff1a1a;
+  transform: scale(1.05);
+  font-weight: bold;
+}
+
+/* ── Restart Button ──────────────────────────────────────────── */
+.spooky-restart-btn {
+  margin-top: 1.5rem;
+  padding: 1.2rem 3.5rem;
+  background: rgba(0, 0, 0, 0.6);
+  border: 3px solid #ff1a1a;
+  color: #ff1a1a;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-family: inherit;
+  font-size: clamp(0.9rem, 1.3vw, 1.2rem);
+  text-transform: uppercase;
+  letter-spacing: 6px;
+  font-weight: 900;
+}
+
+.spooky-restart-btn:hover {
+  background: rgba(255, 0, 0, 0.25);
+  box-shadow: 0 0 30px rgba(255, 26, 26, 0.4);
+  text-shadow: 0 0 10px #ff1a1a;
+  transform: scale(1.05);
+}
+
+/* ── Creepy Shadow Figure ────────────────────────────────────── */
+.spooky-creepy-shadow {
+  position: absolute;
+  width: 25vw;
+  height: 70vh;
+  z-index: 1;
+  pointer-events: none;
+  filter: blur(12px) brightness(0) opacity(0.55);
+  mix-blend-mode: multiply;
+}
+
+.spooky-creepy-shadow.left {
+  left: -25vw;
+  transform-origin: left center;
+  animation: spookyPeekLeft 4s ease-in-out forwards;
+}
+
+.spooky-creepy-shadow.right {
+  right: -25vw;
+  transform-origin: right center;
+  animation: spookyPeekRight 4s ease-in-out forwards;
+}
+
+@keyframes spookyPeekLeft {
+  0%   { left: -25vw; transform: rotate(-5deg); }
+  30%  { left: -10vw; transform: rotate(0deg); }
+  70%  { left: -10vw; transform: rotate(0deg); }
+  100% { left: -25vw; transform: rotate(-5deg); }
+}
+
+@keyframes spookyPeekRight {
+  0%   { right: -25vw; transform: scaleX(-1) rotate(-5deg); }
+  30%  { right: -10vw; transform: scaleX(-1) rotate(0deg); }
+  70%  { right: -10vw; transform: scaleX(-1) rotate(0deg); }
+  100% { right: -25vw; transform: scaleX(-1) rotate(-5deg); }
+}

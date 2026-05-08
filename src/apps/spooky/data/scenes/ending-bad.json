@@ -1,0 +1,8 @@
+{
+  "id": "ending-bad",
+  "title": "Number Five",
+  "text": "You slowly turn toward the door. It’s closed now. You don’t remember closing it. A soft sound comes from behind you. Just the weight of someone shifting their stance.\n\nYou don’t turn around. Because you already understand. The path doesn’t lead people here. It counts them.\n\nAnd you... you’re number five.",
+  "image": "/assets/closing_door.png",
+  "ending": true,
+  "endingMessage": "ENDING: ASSIMILATED. YOU ARE NUMBER FIVE."
+}

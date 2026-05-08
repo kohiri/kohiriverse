@@ -1,0 +1,20 @@
+{
+  "id": "scene2",
+  "title": "The Listening Quiet",
+  "text": "The forest thickens almost immediately. The air cools, damp and heavy, clinging to your skin. The sounds behind you—distant traffic, wind, something familiar—fade faster than they should. Within a few steps, it’s just you and the quiet. Not a peaceful quiet. A listening quiet.",
+  "image": "/assets/forest.png",
+  "choices": [
+    {
+      "id": "walk",
+      "label": "Keep walking",
+      "next": "scene3",
+      "effects": { "fear": 1 }
+    },
+    {
+      "id": "look_around",
+      "label": "Stop and observe your surroundings",
+      "next": "scene3",
+      "effects": { "caution": 1 }
+    }
+  ]
+}
