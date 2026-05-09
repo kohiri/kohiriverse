@@ -58,9 +58,10 @@ html, body {
     font-weight: 400;
     font-style: normal;
     color: var(--color-pink);
-    font-size: 8rem;
+    font-size: clamp(3.5rem, 10vw, 8rem);
     margin-top: 30px;
     margin-bottom: 8px;
+    text-align: center;
 }
 
 .button-container {
@@ -81,8 +82,8 @@ html, body {
     cursor: pointer;
     border-radius: 0.5rem;
     padding: 1rem 1rem;
-    width: 160px;
-    height: 50px;
+    width: clamp(120px, 20vw, 160px);
+    height: clamp(40px, 8vh, 50px);
     text-align: center;
     transition: all 0.45s ease-out;
     position: relative;
@@ -90,7 +91,7 @@ html, body {
     /* for text */
     font-family: sans-serif;
     color: var(--color-maroon);
-    font-size: var(--font-small);
+    font-size: clamp(14px, 2.5vw, var(--font-small));
     font-weight: 500;
   }
   
@@ -244,8 +245,11 @@ html, body {
 .auth-popup {
   background: #fff;
   border-radius: 12px;
-  padding: 2rem;
-  width: 320px;
+  padding: 1.5rem;
+  width: 90vw;
+  max-width: 320px;
+  max-height: 90vh;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -392,8 +396,10 @@ html, body {
   background: #fff;
   border-radius: 8px;
   padding: 1.5rem;
-  width: 400px;
-  max-width: 90%;
+  width: 95vw;
+  max-width: 400px;
+  max-height: 90vh;
+  overflow-y: auto;
   box-shadow: 0 4px 16px rgba(0,0,0,0.2);
   display: flex;
   flex-direction: column;

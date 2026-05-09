@@ -37,55 +37,60 @@ const distanceSq = (p1, p2) => {
   return dx * dx + dy * dy + dz * dz;
 };
 
-const generateStars = (numStars) => {
+const generateStars = () => {
   const stars = [];
+  const allowedIndices = [0, 1, 2, 3, 6, 7, 8, 11, 12, 13];
 
-  let attempts = 0;
-  while (stars.length < numStars && attempts < 1000) {
-    // Spread across X: ±40, Y: ±30, Z: ±40 for a wider exploratory feel
-    const position = [
-      (Math.random() - 0.5) * 80,
-      (Math.random() - 0.5) * 60,
-      (Math.random() - 0.5) * 80,
-    ];
-    
-    let tooClose = false;
-    for (const star of stars) {
-      if (distanceSq(position, star.position) < MIN_DIST_SQ) {
-        tooClose = true;
-        break;
-      }
-    }
+  // We loop through 14 potential slots but only create the allowed ones
+  for (let orbIndex = 0; orbIndex < 14; orbIndex++) {
+    if (!allowedIndices.includes(orbIndex)) continue;
 
-    if (!tooClose) {
-      const size = 1.8 + Math.random() * 1.5; // Range: 1.8 – 3.3 (larger, more dramatic orbs)
-      const color = colors[Math.floor(Math.random() * colors.length)];
+    let position;
+    let attempts = 0;
+    let tooClose = true;
+
+    while (tooClose && attempts < 100) {
+      position = [
+        (Math.random() - 0.5) * 80,
+        (Math.random() - 0.5) * 60,
+        (Math.random() - 0.5) * 80,
+      ];
       
-      const photos = Array.from({ length: Math.floor(Math.random() * 5) + 4 }).map((_, idx) => (
-        `https://picsum.photos/seed/${stars.length}_${idx}/300/300`
-      ));
-
-      const orbIndex = stars.length;
-      stars.push({
-        id: `star_${orbIndex}`,
-        name: orbIndex === 0 ? 'Kush' : 
-              orbIndex === 1 ? 'Scrapbook' : 
-              orbIndex === 2 ? 'Playlists' : 
-              orbIndex === 6 ? 'Photobooth' : 
-              orbIndex === 7 ? 'Headspace' : 
-              orbIndex === 8 ? 'Sound Studio' : 
-              orbIndex === 11 ? 'Spooky' :
-              `Album ${orbIndex + 1}`,
-        position,
-        color,
-        size,
-        texture: TEXTURE_POOL[orbIndex] ?? null, // Custom art if available, else emissive glow
-        photos
-      });
+      tooClose = false;
+      for (const star of stars) {
+        if (distanceSq(position, star.position) < MIN_DIST_SQ) {
+          tooClose = true;
+          break;
+        }
+      }
+      attempts++;
     }
-    attempts++;
+
+    const size = 1.8 + Math.random() * 1.5;
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    
+    const photos = Array.from({ length: Math.floor(Math.random() * 5) + 4 }).map((_, idx) => (
+      `https://picsum.photos/seed/${orbIndex}_${idx}/300/300`
+    ));
+
+    stars.push({
+      id: `star_${orbIndex}`,
+      name: orbIndex === 0 ? 'Kush' : 
+            orbIndex === 1 ? 'Scrapbook' : 
+            orbIndex === 2 ? 'Playlists' : 
+            orbIndex === 6 ? 'Photobooth' : 
+            orbIndex === 7 ? 'Headspace' : 
+            orbIndex === 8 ? 'Sound Studio' : 
+            orbIndex === 11 ? 'Spooky' :
+            `Album ${orbIndex + 1}`,
+      position,
+      color,
+      size,
+      texture: TEXTURE_POOL[orbIndex] ?? null,
+      photos
+    });
   }
   return stars;
 };
 
-export const starsData = generateStars(14);
+export const starsData = generateStars();

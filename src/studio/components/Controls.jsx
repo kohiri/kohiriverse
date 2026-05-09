@@ -40,8 +40,9 @@ const Controls = ({ isPlaying, setIsPlaying, bpm, setBpm, onUpload }) => {
         />
       </div>
 
-      <div className="upload-control">
+      <div className="upload-control desktop-only">
         <input 
+          id="audio-upload"
           type="file" 
           accept="audio/*" 
           ref={fileInputRef} 

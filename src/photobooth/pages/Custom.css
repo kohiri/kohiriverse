@@ -1,13 +1,15 @@
 .customize-wrapper {
   display: flex;
   flex-direction: row;
-  min-height: 100vh;
+  flex-wrap: wrap;
+  height: 100vh;
   background-color: #33053e;
-  padding: 20px 60px;
-  gap: 40px;
+  padding: clamp(10px, 2vh, 20px) clamp(10px, 5vw, 60px) clamp(40px, 8vh, 80px) clamp(10px, 5vw, 60px);
+  gap: clamp(20px, 4vw, 40px);
   overflow-y: auto;
   align-items: flex-start;
   justify-content: center;
+  box-sizing: border-box;
 }
 
 /* Left panel: sidebar controls */
@@ -16,7 +18,8 @@
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
-  width: 500px; /* Slightly wider to accommodate 2 columns */
+  width: 100%;
+  max-width: 500px; /* Slightly wider to accommodate 2 columns */
   flex-shrink: 0;
   gap: 15px;
   padding-bottom: 30px;
@@ -93,7 +96,8 @@
   padding: 25px;
   justify-content: flex-start;
   position: relative;
-  width: 280px; /* Fixed width to prevent collapsing */
+  width: 100%;
+  max-width: 280px; /* Limit width */
   box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 }
 

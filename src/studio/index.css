@@ -14,7 +14,7 @@
   overflow-x: hidden;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start; /* Changed from center to prevent top overflow */
   /* Glowing grid lines background */
   background-image: 
     linear-gradient(rgba(93, 214, 44, 0.05) 1px, transparent 1px),
@@ -143,35 +143,25 @@
   100% { clip-path: inset(30% 0 60% 0); }
 }
 
-/* Layout */
-.app-container {
+/* Layout specifically for Studio */
+.app-container.studio-root {
   display: flex;
-  flex-direction: row;
+  flex-direction: row !important; /* Always side-by-side */
   height: 100vh;
   width: 100vw;
-  padding: 20px;
-  gap: 20px;
+  padding: 10px;
+  gap: 10px;
   max-width: 1600px;
   margin: 0 auto;
+  overflow: hidden !important; /* No global page scrolling */
+  align-items: stretch;
 }
 
-.main-content {
+.app-container.studio-root .main-content {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 20px;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .app-container {
-    flex-direction: column;
-    padding: 10px;
-  }
-  .sidebar {
-    height: 30vh;
-  }
-  .main-content {
-    overflow-y: auto;
-  }
+  gap: 10px;
+  overflow: hidden; /* Let its children scroll, not itself */
+  min-width: 0; /* Important: prevents flex items from blowing out width */
 }

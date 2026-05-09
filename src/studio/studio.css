@@ -5,11 +5,13 @@
   align-items: center;
   padding: 15px 20px;
   margin-bottom: 0px;
+  flex-wrap: wrap;
+  gap: 15px;
 }
 
 .title-container h1 {
-  font-size: 2.5rem;
-  letter-spacing: 5px;
+  font-size: clamp(1.5rem, 5vw, 2.5rem);
+  letter-spacing: clamp(2px, 1vw, 5px);
   color: var(--color-neon-green);
   font-weight: 700;
   text-shadow: 0 0 10px rgba(93, 214, 44, 0.5);
@@ -17,8 +19,8 @@
 }
 
 .title-container .subtitle {
-  font-size: 0.8rem;
-  letter-spacing: 10px;
+  font-size: clamp(0.5rem, 2vw, 0.8rem);
+  letter-spacing: clamp(4px, 2vw, 10px);
   color: var(--color-dark-green);
 }
 
@@ -152,7 +154,7 @@
 
 .neon-slider {
   -webkit-appearance: none;
-  width: 200px;
+  width: clamp(100px, 40vw, 200px);
   height: 2px;
   background: var(--color-dark-green);
   outline: none;
@@ -177,6 +179,7 @@
   padding: 20px;
   flex: 1;
   overflow-y: auto;
+  overflow-x: auto;
   position: relative;
 }
 
@@ -188,6 +191,7 @@
   padding: 5px;
   border-left: 2px solid transparent;
   transition: all 0.2s;
+  min-width: 750px;
 }
 
 .track-row:hover {
@@ -292,4 +296,82 @@
   font-size: 0.5rem;
   color: var(--color-dark-green);
   letter-spacing: 2px;
+}
+
+/* Mobile Layout Overrides & Utilities */
+.mobile-only {
+  display: none !important;
+}
+
+.desktop-only {
+  display: flex;
+}
+
+@media (max-width: 1024px), (max-height: 600px) {
+  .mobile-only {
+    display: flex !important;
+  }
+  .desktop-only {
+    display: none !important;
+  }
+  
+  .sidebar {
+    display: flex !important;
+    flex: 0 0 clamp(120px, 25vw, 250px) !important;
+    height: 100% !important;
+    overflow: hidden !important; /* Force internal scroll for track-list */
+    transition: all 0.3s ease;
+  }
+  
+  .sidebar-closed {
+    flex: 0 0 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    opacity: 0;
+    overflow: hidden !important;
+  }
+  
+  .sidebar-open {
+    opacity: 1;
+  }
+
+  .title-container h1 {
+    font-size: clamp(1rem, 3vw, 1.8rem) !important;
+    letter-spacing: 2px !important;
+  }
+  
+  .neon-btn {
+    padding: 6px 10px !important;
+    font-size: 0.65rem !important;
+  }
+
+  /* Compact padding for vertical space saving */
+  .top-bar {
+    padding: 8px 10px !important;
+    gap: 5px !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+  }
+  
+  .mobile-export-share {
+    gap: 5px !important;
+  }
+  
+  .mobile-export-share .export-btn {
+    padding: 4px 8px !important;
+    font-size: 0.6rem !important;
+    white-space: nowrap;
+  }
+  
+  .controls-container {
+    padding: 8px 10px !important;
+    gap: 5px !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto;
+  }
+  
+  .sequencer-container {
+    padding: 10px !important;
+    gap: 4px !important;
+  }
 }

@@ -27,7 +27,7 @@ const Sidebar = ({ library, activeTracks, onAddTrack, isRecording, onToggleRecor
         })}
       </div>
       
-      <div className="sidebar-actions">
+      <div className="sidebar-actions desktop-only">
         <button 
           className="neon-btn export-btn" 
           onClick={onToggleRecord}

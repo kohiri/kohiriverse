@@ -27,6 +27,7 @@ function StudioApp() {
   const [bpm, setBpm] = useState(DEFAULT_BPM);
   const [currentStep, setCurrentStep] = useState(0);
   const [isRecording, setIsRecording] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const navigate = useNavigate();
   
   // Audio context & routing
@@ -422,19 +423,9 @@ function StudioApp() {
   };
 
   return (
-    <div className="app-container studio-root" style={{ position: 'fixed', inset: 0, zIndex: 100 }}>
-      {/* Back Button Overlay */}
-      <div style={{ position: 'absolute', top: '20px', left: '20px', zIndex: 200 }}>
-        <button 
-          onClick={() => navigate('/')}
-          className="neon-btn" 
-          style={{ padding: '8px 16px', fontSize: '12px' }}
-        >
-          ← BACK TO GALAXY
-        </button>
-      </div>
+    <div className="app-container studio-root">
 
-      <div className="sidebar hud-panel" style={{ marginTop: '60px' }}>
+      <div className={`sidebar hud-panel ${isSidebarOpen ? 'sidebar-open' : 'sidebar-closed'}`}>
         <Sidebar 
           library={LIBRARY_INSTRUMENTS} 
           activeTracks={activeTracks} 
@@ -444,13 +435,39 @@ function StudioApp() {
           onShare={handleShare}
         />
       </div>
-      <div className="main-content" style={{ marginTop: '60px' }}>
+      <div className="main-content">
         <div className="top-bar hud-panel">
-          <div className="title-container glitch-hover" data-text="CYBER STUDIO">
-            <h1>CYBER STUDIO</h1>
-            <div className="subtitle" style={{ letterSpacing: '4px' }}>STUPID SOUND CLUB</div>
+          <div className="nav-controls" style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+            <button 
+              onClick={() => navigate('/')}
+              className="neon-btn" 
+              style={{ padding: '8px 16px', fontSize: '12px' }}
+            >
+              ← BACK
+            </button>
+            <button 
+              onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+              className="neon-btn mobile-only" 
+              style={{ padding: '8px 16px', fontSize: '12px' }}
+            >
+              ☰ LIB
+            </button>
           </div>
-          <div className="status-indicators">
+          
+          <div className="center-panel" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '5px' }}>
+            <div className="title-container glitch-hover" data-text="CYBER STUDIO">
+              <h1>CYBER STUDIO</h1>
+              <div className="subtitle desktop-only" style={{ letterSpacing: '4px' }}>STUPID SOUND CLUB</div>
+            </div>
+            <button 
+              className="neon-btn glitch-hover mobile-only" 
+              onClick={() => document.getElementById('audio-upload')?.click()}
+              style={{ padding: '4px 12px', fontSize: '10px' }}
+            >
+              UPLOAD SYS
+            </button>
+          </div>
+          <div className="status-indicators desktop-only">
             <div className="status-box">
               <span className="label">SYS_STATUS</span>
               <span>ONLINE</span>
@@ -460,6 +477,17 @@ function StudioApp() {
               <span>{isPlaying ? 'ACTIVE' : 'STBY'}</span>
             </div>
             <div className="barcode"></div>
+          </div>
+          
+          <div className="mobile-export-share mobile-only" style={{ display: 'none', gap: '5px', flexDirection: 'column' }}>
+            <button 
+              className="neon-btn export-btn" 
+              onClick={toggleRecording}
+              style={isRecording ? { backgroundColor: 'red', color: 'white', borderColor: 'red' } : {}}
+            >
+              {isRecording ? 'STOP REC' : 'EXP MIX'}
+            </button>
+            <button className="neon-btn export-btn" onClick={handleShare}>SHARE</button>
           </div>
         </div>
         

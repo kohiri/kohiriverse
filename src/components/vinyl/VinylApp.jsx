@@ -54,7 +54,7 @@ export default function VinylApp({ onBack }) {
         
         <header className="header text-center mb-20 relative z-10">
           <h1 className="font-extralight text-[2.5rem] tracking-[0.4em] uppercase mb-2 text-shadow-[0_0_20px_rgba(255,255,255,0.2)]">
-            Kohiriverse // Music
+            Koriverse // Music
           </h1>
           <p className="text-[0.75rem] tracking-[0.2em] text-white/40">SELECT A RECORD TO PLAY ON SPOTIFY</p>
         </header>

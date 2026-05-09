@@ -5,16 +5,20 @@ import StudioApp from './studio/StudioApp'
 import HeadspacePortal from './apps/headspace/HeadspacePortal'
 import SpookyGame from './apps/spooky/SpookyGame'
 import { useNavigate } from 'react-router-dom'
+import DeviceOrientationOverlay from './components/DeviceOrientationOverlay'
 
 function App() {
   return (
-    <Routes>
-      <Route path="/" element={<GalaxyView />} />
-      <Route path="/photobooth/*" element={<PhotoboothApp />} />
-      <Route path="/studio/*" element={<StudioApp />} />
-      <Route path="/headspace/*" element={<HeadspacePortal />} />
-      <Route path="/spooky" element={<SpookyGameWrapper />} />
-    </Routes>
+    <>
+      <DeviceOrientationOverlay />
+      <Routes>
+        <Route path="/" element={<GalaxyView />} />
+        <Route path="/photobooth/*" element={<PhotoboothApp />} />
+        <Route path="/studio/*" element={<StudioApp />} />
+        <Route path="/headspace/*" element={<HeadspacePortal />} />
+        <Route path="/spooky" element={<SpookyGameWrapper />} />
+      </Routes>
+    </>
   )
 }
 

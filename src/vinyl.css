@@ -257,3 +257,47 @@
   display: block;
   box-shadow: 0 20px 80px rgba(0, 0, 0, 0.5); /* Soft grounding shadow */
 }
+
+/* Mobile Overrides for Vinyl Records */
+@media (max-width: 1024px) {
+  .playlist-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 3rem 1rem !important;
+    padding: 0 50px 0 10px !important; /* Extra padding on right so discs don't get cut off */
+  }
+  
+  .vinyl-record-wrapper {
+    position: relative;
+  }
+  
+  /* Ensure the left column (odd) sits on top of the right column (even) so the disc isn't hidden behind the right cover */
+  .vinyl-record-wrapper:nth-child(odd) {
+    z-index: 10;
+  }
+  
+  .vinyl-record-container {
+    width: clamp(100px, 32vw, 150px) !important;
+    height: clamp(100px, 32vw, 150px) !important;
+    margin-bottom: 0.5rem !important;
+  }
+  
+  .vinyl-disc {
+    transform: translateX(50%) rotate(45deg) !important;
+    box-shadow:
+      10px 0 15px rgba(0,0,0,0.6),
+      0 0 15px 3px color-mix(in srgb, var(--vinyl-color) 45%, transparent),
+      0 0 5px 1px var(--vinyl-color) inset !important;
+  }
+
+  .vinyl-cover {
+    transform: scale(1.02) !important;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.8), 0 0 10px 2px color-mix(in srgb, var(--vinyl-color) 30%, transparent) !important;
+    z-index: 2 !important;
+  }
+  
+  .album-title {
+    font-size: 0.7rem !important;
+    text-align: center;
+    max-width: 140px;
+  }
+}
