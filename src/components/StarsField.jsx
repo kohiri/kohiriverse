@@ -20,6 +20,7 @@ export default function StarsField({ onStarClick, galaxyData, setGalaxyData, set
             size={star.size}
             name={star.name}
             texture={star.texture}
+            // Use onPointerDown/Up to detect a tap if onClick is being swallowed by DragControls
             onClick={() => onStarClick && onStarClick(star)}
           />
         </DragControls>

@@ -133,7 +133,7 @@ const Photobooth: React.FC = () => {
       </div>
 
       <div className="camera-area">
-        <div style={{ fontFamily: "title font", fontSize: "60px", marginBottom: "1px" }}>Capturing Photos</div>
+        <div className="camera-title">Capturing Photos</div>
         <div className="camera-wrapper">
           {countdown !== null && (
             <div className="countdown-overlay">{countdown}</div>

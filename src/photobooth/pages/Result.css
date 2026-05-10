@@ -26,9 +26,16 @@
   padding: clamp(10px, 4vw, 50px); 
   box-sizing: border-box;
   height: 100%;
-  /* min-height: 100vh; */
-  /* background-color: blue; */
-  /* width: 100%; */
+  width: 100%;
+}
+
+.result-main-layout {
+  display: flex;
+  flex-direction: column; /* Default vertical for desktop/laptop */
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
 }
 
 /* photostrip container only */
@@ -43,24 +50,14 @@
   padding: 20px;
   height: clamp(60%, 70vh, 80%);
   max-width: 90vw;
-  /* background-color: red; */
+  width: fit-content;
 }
 
-/* photostrip */
-.photostrip-combo {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  /* transform: translateY(-120%);  */
-  padding: 20px;
-  gap: 20px;
-  animation: printDown 2s ease-out forwards;
-}
+
 
 .photostrip-mask {
   height: 100%;
-  max-width: 90vw;
-  width: clamp(200px, 70vw, 250px);
+  width: clamp(200px, 30vw, 250px);
   overflow-y: auto;
   overflow-x: hidden;
 }
@@ -70,6 +67,7 @@
   aspect-ratio: 4/3;
   overflow: hidden;
   position: relative;
+  flex-shrink: 0;
 }
 
 .photostrip-combo .individual-photo {
@@ -125,8 +123,6 @@
   border-radius: 4px;
 }
 
-
-
 /* placeholder (empty) styling */
 .photostrip-combo .individual-photo.placeholder {
   background-color: #222;
@@ -174,6 +170,41 @@
   margin-top: 16px;
   display: flex;
   gap: 12px;
+  flex-direction: row;
+}
+
+/* MOBILE RESPONSIVENESS: Side-by-side layout for mobile landscape and small screens */
+@media screen and (max-width: 1024px) {
+  .result-main-layout {
+    flex-direction: row;
+    gap: clamp(10px, 3vw, 40px);
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+  }
+
+  .result-container {
+    height: 90%;
+    max-height: 80vh;
+    padding: 15px;
+    width: auto;
+    flex-shrink: 0;
+  }
+
+  .photostrip-mask {
+    width: clamp(140px, 20vw, 200px);
+    overflow: visible; /* Show all 3 strips as requested */
+  }
+
+  .photostrip-combo {
+    padding: 15px;
+    gap: 15px;
+  }
+
+  .result-actions {
+    flex-direction: column;
+    margin-top: 0;
+  }
 }
 
 .result-actions button {
@@ -284,11 +315,33 @@
 
 .photostrip-combo {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  gap: 20px;
+  animation: printDown 2s ease-out forwards;
   z-index: 1;                         
   transition: transform 0.3s ease;
 }
+
 .result-container:hover .photostrip-combo {
   transform: scale(0.98);             
+}
+
+/* Small screen vertical scaling to ensure all 3 photos fit without scroll */
+/* Only apply this when in mobile/side-by-side mode */
+@media screen and (max-width: 1024px) and (max-height: 500px) {
+  .photostrip-combo {
+    transform: scale(0.7);
+    transform-origin: top center;
+    margin-top: -30px; 
+  }
+  
+  .result-actions button {
+    padding: 0.5rem;
+    height: 35px;
+    font-size: 14px;
+  }
 }
 
 /* confirmation modal */

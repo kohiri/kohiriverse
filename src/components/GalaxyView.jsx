@@ -12,8 +12,29 @@ function GalaxyView() {
   const [searchQuery, setSearchQuery] = useState('')
   const [galaxyData, setGalaxyData] = useState(initialStarsData)
   const [isMusicPlaying, setIsMusicPlaying] = useState(false)
+  const [isFullscreen, setIsFullscreen] = useState(false)
   const audioRef = useRef(null)
   const navigate = useNavigate()
+
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
+  }, []);
+
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch(err => {
+        console.error(`Error attempting to enable full-screen mode: ${err.message}`);
+      });
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      }
+    }
+  };
 
   useEffect(() => {
     if (isMusicPlaying && !selectedStar) {
@@ -93,28 +114,7 @@ function GalaxyView() {
         {/* Main Navigation (Socials/About) */}
         <SocialsMenu />
 
-        {/* Audio Toggle Button */}
-        <button
-          onClick={() => setIsMusicPlaying(!isMusicPlaying)}
-          className="group flex items-center justify-center w-11 h-11 bg-white/[0.03] backdrop-blur-3xl border border-white/10 rounded-full hover:bg-white/10 hover:border-white/20 transition-all duration-500 active:scale-90 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1),0_8px_16px_-4px_rgba(0,0,0,0.5)]"
-          aria-label={isMusicPlaying ? "Mute Music" : "Play Music"}
-        >
-          {isMusicPlaying ? (
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-white/40 group-hover:text-white transition-all duration-500">
-              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-              <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-              <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
-            </svg>
-          ) : (
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-white/40 group-hover:text-white transition-all duration-500">
-              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-              <line x1="23" y1="9" x2="17" y2="15"></line>
-              <line x1="17" y1="9" x2="23" y2="15"></line>
-            </svg>
-          )}
-        </button>
-
-        {/* Orb List Toggle (Now below Sound) */}
+        {/* Orb List Toggle (Search) */}
         <div className="relative">
           <button
             onClick={() => setShowOrbList(!showOrbList)}
@@ -183,6 +183,47 @@ function GalaxyView() {
             </div>
           )}
         </div>
+
+        {/* Audio Toggle Button */}
+        <button
+          onClick={() => setIsMusicPlaying(!isMusicPlaying)}
+          className="group flex items-center justify-center w-11 h-11 bg-white/[0.03] backdrop-blur-3xl border border-white/10 rounded-full hover:bg-white/10 hover:border-white/20 transition-all duration-500 active:scale-90 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1),0_8px_16px_-4px_rgba(0,0,0,0.5)]"
+          aria-label={isMusicPlaying ? "Mute Music" : "Play Music"}
+        >
+          {isMusicPlaying ? (
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-white/40 group-hover:text-white transition-all duration-500">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+              <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+              <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+            </svg>
+          ) : (
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-white/40 group-hover:text-white transition-all duration-500">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+              <line x1="23" y1="9" x2="17" y2="15"></line>
+              <line x1="17" y1="9" x2="23" y2="15"></line>
+            </svg>
+          )}
+        </button>
+      </div>
+
+      {/* Bottom Right Controls */}
+      <div className="absolute bottom-5 right-5 md:bottom-10 md:right-10 z-30 flex flex-col items-end gap-3">
+        {/* Fullscreen Toggle Button */}
+        <button
+          onClick={toggleFullscreen}
+          className="group flex items-center justify-center w-11 h-11 bg-white/[0.03] backdrop-blur-3xl border border-white/10 rounded-full hover:bg-white/10 hover:border-white/20 transition-all duration-500 active:scale-90 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1),0_8px_16px_-4px_rgba(0,0,0,0.5)]"
+          aria-label={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
+        >
+          {isFullscreen ? (
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-white/40 group-hover:text-white transition-all duration-500">
+              <path d="M4 14h6v6M20 10h-6V4M14 10l7-7M10 14l-7 7"></path>
+            </svg>
+          ) : (
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-white/40 group-hover:text-white transition-all duration-500">
+              <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path>
+            </svg>
+          )}
+        </button>
       </div>
 
       {selectedStar && selectedStar.id !== 'star_2' && selectedStar.id !== 'star_6' && selectedStar.id !== 'star_7' && selectedStar.id !== 'star_8' && selectedStar.id !== 'star_11' && (

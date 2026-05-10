@@ -1,21 +1,50 @@
 import React from 'react';
 import HTMLFlipBook from 'react-pageflip';
 
-export default function FlipBook({ pages, onAddPage }) {
+export default function FlipBook({ pages, onAddPage, scale = 1 }) {
   return (
-    <div style={{ margin: 'auto', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '30px' }}>
-      <div style={{ position: 'relative', width: '900px', height: '600px' }}>
+    <div style={{ 
+      margin: 'auto', 
+      display: 'flex', 
+      flexDirection: 'column', 
+      alignItems: 'center', 
+      gap: '15px',
+      width: '100%',
+      overflow: 'hidden',
+      paddingTop: '40px'
+    }}>
+      <div style={{ 
+        position: 'relative', 
+        width: 900 * scale, 
+        height: 600 * scale,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        // Adding a frame effect
+        boxShadow: '0 15px 40px rgba(0,0,0,0.2)',
+        borderRadius: '8px',
+        padding: '10px',
+        backgroundColor: 'rgba(255,255,255,0.05)',
+        border: '1px solid rgba(255,255,255,0.1)'
+      }}>
         <HTMLFlipBook 
-          width={450} 
-          height={600} 
+          key={`flipbook-${scale}`} // Force re-mount on scale change to recalculate hit areas
+          width={450 * scale} 
+          height={600 * scale} 
           size="fixed"
-          minWidth={450}
-          maxWidth={450}
-          minHeight={600}
-          maxHeight={600}
-          maxShadowOpacity={0.5}
+          minWidth={450 * scale}
+          maxWidth={450 * scale}
+          minHeight={600 * scale}
+          maxHeight={600 * scale}
+          maxShadowOpacity={0} // Removed shadows
           showCover={true}
           mobileScrollSupport={true}
+          usePortrait={false} 
+          startPage={0}
+          drawShadow={false} // Removed shadows
+          flippingTime={1000}
+          useMouseEvents={true}
+          clickEventForward={true}
         >
         {/* Front Cover */}
         <div className="page page-cover page-cover-top" data-density="hard">
@@ -69,15 +98,17 @@ export default function FlipBook({ pages, onAddPage }) {
       <button 
         onClick={onAddPage}
         style={{
-          padding: '12px 24px',
+          padding: '6px 16px',
           backgroundColor: 'var(--text-main)',
           color: 'white',
           border: 'none',
-          borderRadius: '24px',
-          fontSize: '1.2rem',
+          borderRadius: '20px',
+          fontSize: '0.75rem',
           fontWeight: 'bold',
           cursor: 'pointer',
-          boxShadow: '0 4px 10px rgba(0,0,0,0.1)'
+          boxShadow: '0 4px 10px rgba(0,0,0,0.1)',
+          marginTop: '-5px',
+          zIndex: 10
         }}
       >
         Create New Page

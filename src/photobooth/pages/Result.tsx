@@ -202,61 +202,63 @@ const Result: React.FC = () => {
         <div style={{display: "flex", flexDirection: "row", alignItems: "center", gap: "10px", padding: "10px"}}>
           <div style={{ fontFamily: "title font", fontSize: "40px", marginBottom: "10px" }}>Printing ...</div>
         </div>
-        {/* photobooth box */}
-        <div className="result-container">
-          <button
-            className="save-btn"
-            onClick={handleSaveClick}>
-            Save
-          </button>
+        <div className="result-main-layout">
+          {/* photobooth box */}
+          <div className="result-container">
+            <button
+              className="save-btn"
+              onClick={handleSaveClick}>
+              Save
+            </button>
 
-          <div className="photostrip-mask">
-            <div ref={comboRef} className={`photostrip-combo ${frameStyle}`} style={bgStyle}>
-              {photos.map((photo, index) => {
-                const ratio = aspectRatios[index] || (4 / 3); 
-                const isWide = ratio > (4 / 3);
-                const baseWidth = isWide ? 'auto' : '100%';
-                const baseHeight = isWide ? '100%' : 'auto';
+            <div className="photostrip-mask">
+              <div ref={comboRef} className={`photostrip-combo ${frameStyle}`} style={bgStyle}>
+                {photos.map((photo, index) => {
+                  const ratio = aspectRatios[index] || (4 / 3); 
+                  const isWide = ratio > (4 / 3);
+                  const baseWidth = isWide ? 'auto' : '100%';
+                  const baseHeight = isWide ? '100%' : 'auto';
 
-                return photo ? (
-                  <div key={index} className="individual-photo-container">
-                    <img
-                      src={photo.url}
-                      alt={`Captured ${index}`}
-                      className="individual-photo"
-                      onLoad={(e) => handleImageLoad(index, e)}
-                      style={{
-                        filter: filterStyle,
-                        width: baseWidth,
-                        height: baseHeight,
-                        minWidth: isWide ? '0' : '100%',
-                        minHeight: isWide ? '100%' : '0',
-                        transform: `translate(-50%, -50%) scale(${photo.scale}) translate(${photo.offset.x}px, ${photo.offset.y}px)`,
-                      }}
-                    />
-                  </div>
-                ) : (
-                  <div key={index} className="individual-photo-container">
-                    <div className="individual-photo placeholder">
-                      Empty
+                  return photo ? (
+                    <div key={index} className="individual-photo-container">
+                      <img
+                        src={photo.url}
+                        alt={`Captured ${index}`}
+                        className="individual-photo"
+                        onLoad={(e) => handleImageLoad(index, e)}
+                        style={{
+                          filter: filterStyle,
+                          width: baseWidth,
+                          height: baseHeight,
+                          minWidth: isWide ? '0' : '100%',
+                          minHeight: isWide ? '100%' : '0',
+                          transform: `translate(-50%, -50%) scale(${photo.scale}) translate(${photo.offset.x}px, ${photo.offset.y}px)`,
+                        }}
+                      />
                     </div>
+                  ) : (
+                    <div key={index} className="individual-photo-container">
+                      <div className="individual-photo placeholder">
+                        Empty
+                      </div>
+                    </div>
+                  )
+                })}
+                {(caption || showTimestamp) && (
+                  <div className="footer-section">
+                    {caption && <div className="caption-display">{caption}</div>}
+                    {showTimestamp && <div className="timestamp">{timestamp}</div>}
                   </div>
-                )
-              })}
-              {(caption || showTimestamp) && (
-                <div className="footer-section">
-                  {caption && <div className="caption-display">{caption}</div>}
-                  {showTimestamp && <div className="timestamp">{timestamp}</div>}
-                </div>
-              )}
+                )}
+              </div>
             </div>
           </div>
 
-        </div>
-        {/* share, download button */}
-        <div className = "result-actions">
-            <button onClick={handleDownload}>Download</button>
-            <button onClick={handleShare}>Share</button>
+          {/* share, download button */}
+          <div className = "result-actions">
+              <button onClick={handleDownload}>Download</button>
+              <button onClick={handleShare}>Share</button>
+          </div>
         </div>
       </div>
 

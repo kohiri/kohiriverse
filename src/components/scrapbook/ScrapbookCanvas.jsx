@@ -51,10 +51,13 @@ export default function ScrapbookCanvas({ activeTool, activeColor, elements, set
   const getCoordinates = (e) => {
     if (!canvasRef.current) return { x: 0, y: 0 };
     const rect = canvasRef.current.getBoundingClientRect();
-    // Map the actual cursor position to the 450x600 logical canvas pixels
+    // Support both mouse and touch events
+    const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+    const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+    
     return {
-      x: (e.clientX - rect.left) * (450 / rect.width),
-      y: (e.clientY - rect.top) * (600 / rect.height),
+      x: (clientX - rect.left) * (450 / rect.width),
+      y: (clientY - rect.top) * (600 / rect.height),
     };
   };
 
@@ -141,16 +144,17 @@ export default function ScrapbookCanvas({ activeTool, activeColor, elements, set
         backgroundSize: 'contain',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
-        filter: 'drop-shadow(0 15px 40px rgba(133, 115, 166, 0.25))', // adds nice shadow to the transparent PNG edges
+        filter: 'drop-shadow(0 15px 40px rgba(133, 115, 166, 0.25))',
+        transformOrigin: 'top left',
       }}
       onClick={handleCanvasClick}
     >
       <canvas
         ref={canvasRef}
-        onMouseDown={startDrawing}
-        onMouseMove={draw}
-        onMouseUp={stopDrawing}
-        onMouseLeave={stopDrawing}
+        onPointerDown={startDrawing}
+        onPointerMove={draw}
+        onPointerUp={stopDrawing}
+        onPointerLeave={stopDrawing}
         style={{
           cursor: activeTool === 'pen' ? 'crosshair' : activeTool === 'eraser' ? 'cell' : 'default',
           width: '100%',
@@ -190,6 +194,8 @@ export default function ScrapbookCanvas({ activeTool, activeColor, elements, set
                     );
                     setElements(newElements);
                   }}
+                  onMouseDown={(e) => e.stopPropagation()}
+                  onPointerDown={(e) => e.stopPropagation()}
                   style={{
                     width: '100%', height: '100%', background: 'transparent',
                     border: 'none', fontSize: '18px', outline: 'none',
@@ -325,7 +331,7 @@ export default function ScrapbookCanvas({ activeTool, activeColor, elements, set
             minWidth={30}
             minHeight={30}
             bounds="parent"
-            scale={scale}
+            scale={scale * zoom}
             style={{ zIndex: 20 }}
           >
             <div style={{

@@ -21,30 +21,61 @@ export default function Scrapbook() {
   const canvasRefInner = useRef(null);
 
   const [scale, setScale] = useState(1);
+
   useEffect(() => {
     const handleResize = () => {
-      const availableHeight = window.innerHeight - 120;
-      const availableWidth = window.innerWidth - 40;
-      
       const isMobile = window.innerWidth < 768;
-      const requiredHeight = 650;
-      const requiredWidth = isMobile ? 450 : 700; // 450 canvas + tools
+      const isLandscape = window.innerWidth > window.innerHeight;
+      
+      // We want to leave some padding for UI elements
+      // On small landscape screens, we reduce the padding to maximize space
+      const paddingH = isMobile ? (isLandscape ? 40 : 100) : 120;
+      const paddingW = isMobile ? 20 : 60;
+
+      const availableHeight = window.innerHeight - paddingH;
+      const availableWidth = window.innerWidth - paddingW;
+      
+      let requiredHeight = 650;
+      let requiredWidth = 950; 
+
+      if (isEditing) {
+        requiredWidth = isMobile ? (isLandscape ? 1000 : 500) : 1000;
+        requiredHeight = isMobile ? (isLandscape ? 650 : 1100) : 700;
+      }
       
       const scaleH = availableHeight / requiredHeight;
       const scaleW = availableWidth / requiredWidth;
       
-      setScale(Math.min(scaleH, scaleW, 1));
+      // Ensure we have a minimum scale on mobile to keep things readable
+      // If the scale is too small, we'll let the container scroll
+      const minScale = isMobile ? 0.5 : 0.3;
+      let newScale = Math.min(scaleH, scaleW, 1);
+      
+      if (newScale < minScale && isMobile) {
+        newScale = minScale;
+      }
+
+      setScale(newScale);
     };
     window.addEventListener('resize', handleResize);
     handleResize();
     return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  }, [isEditing]);
 
   useEffect(() => {
     fetchPages();
     const onAddedStroke = () => setActionHistory(prev => [...prev, 'stroke']);
     window.addEventListener('addedStroke', onAddedStroke);
-    return () => window.removeEventListener('addedStroke', onAddedStroke);
+
+    // Failsafe for loading state
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 5000);
+
+    return () => {
+      window.removeEventListener('addedStroke', onAddedStroke);
+      clearTimeout(timer);
+    };
   }, []);
 
   const fetchPages = async () => {
@@ -155,7 +186,11 @@ export default function Scrapbook() {
       // Reset editor
       clearCanvas();
       setIsEditing(false);
-      await fetchPages(); // Refresh the book!
+      
+      // Force a short delay before fetching to ensure DB update is consistent
+      setTimeout(() => {
+        fetchPages();
+      }, 500);
     } catch (err) {
       console.error('Failed to save page', err);
       alert(`Failed to save page: ${err.message || err.error_description || JSON.stringify(err)}`);
@@ -163,6 +198,7 @@ export default function Scrapbook() {
       setIsUploading(false);
     }
   };
+  const isMobile = window.innerWidth < 768;
 
   if (!supabase) {
     return (
@@ -180,15 +216,31 @@ export default function Scrapbook() {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center p-20 gap-4">
+      <div className="flex flex-col items-center justify-center p-20 gap-6">
         <div className="animate-spin rounded-full h-12 w-12 border-4 border-zinc-700 border-t-blue-500"></div>
-        <p className="text-zinc-500 font-medium tracking-widest uppercase text-xs">Loading Book...</p>
+        <div className="flex flex-col items-center gap-2">
+          <p className="text-zinc-500 font-medium tracking-widest uppercase text-[10px]">Synchronizing Book...</p>
+          <button 
+            onClick={() => { setLoading(true); fetchPages(); }}
+            className="text-[10px] text-blue-400/60 hover:text-blue-400 underline underline-offset-4 tracking-widest uppercase"
+          >
+            Force Refresh
+          </button>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="scrapbook-container" style={{ padding: '10px 0' }}>
+    <div className="scrapbook-container" style={{ 
+      padding: '10px 0', 
+      width: '100%', 
+      height: '100%', 
+      overflow: 'auto',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center'
+    }}>
       
       {!isEditing ? (
         <div style={{ position: 'relative', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -205,14 +257,25 @@ export default function Scrapbook() {
               </button>
             </div>
           ) : (
-            <FlipBook pages={pages} onAddPage={() => setIsEditing(true)} />
+            <FlipBook pages={pages} onAddPage={() => setIsEditing(true)} scale={scale} />
           )}
         </div>
       ) : (
-        <div style={{ margin: 'auto', display: 'flex', flexWrap: 'wrap', gap: '40px', alignItems: 'center', justifyContent: 'center', padding: '20px', width: '100%' }}>
+        <div style={{ 
+          margin: 'auto', 
+          display: 'grid', 
+          gridTemplateColumns: isMobile ? 'auto 1fr auto' : 'auto 1fr auto',
+          gap: isMobile ? '10px' : '30px', 
+          alignItems: 'start', 
+          justifyContent: 'center', 
+          padding: '10px', 
+          width: '100%',
+          minHeight: '100%',
+          maxWidth: '1200px'
+        }}>
           
-          {/* Left Panel: Tools & Actions */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          {/* Left Column: Tools & Primary Actions */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', alignItems: 'center' }}>
             <StationeryToolbar 
               activeTool={activeTool}
               setActiveTool={setActiveTool}
@@ -221,59 +284,67 @@ export default function Scrapbook() {
               onClear={clearCanvas}
               onAddElement={handleAddElement}
               onUndo={handleUndo}
+              isMobile={isMobile}
+              showTools={true}
+              showPanel={false}
             />
             
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', width: '100%' }}>
               <button 
                 onClick={handleSavePage}
                 disabled={isUploading}
                 style={{ 
-                    padding: '12px', 
-                    fontSize: '1.1rem', 
-                    backgroundColor: isUploading ? 'var(--accent-pink)' : 'var(--text-main)', 
+                    padding: '8px', 
+                    fontSize: '0.8rem', 
+                    backgroundColor: 'var(--text-main)', 
                     color: 'white', 
-                    fontWeight: 'bold', 
-                    width: '100%' 
+                    fontWeight: 'bold',
+                    borderRadius: '8px'
                 }}
               >
-                {isUploading ? 'Saving...' : 'Save Page'}
+                {isUploading ? '...' : 'Save'}
               </button>
               <button 
                 onClick={() => setIsEditing(false)}
                 disabled={isUploading}
-                style={{ padding: '12px', fontSize: '1.1rem', backgroundColor: '#fff', color: 'var(--text-main)', border: '1px solid #ccc', width: '100%' }}
+                style={{ 
+                  padding: '8px', 
+                  fontSize: '0.8rem', 
+                  backgroundColor: '#fff', 
+                  color: '#666', 
+                  border: '1px solid #ddd',
+                  borderRadius: '8px'
+                }}
               >
                 Cancel
               </button>
             </div>
           </div>
 
-          {/* Right Panel: Scrapbook Area */}
-          <div className="scrapbook-wrapper" style={{ display: 'flex', flexDirection: 'column', gap: '16px', alignItems: 'center' }}>
-            
-            {/* Options */}
-            <div style={{ display: 'flex', gap: '8px' }}>
-              {['1.png', '2.png', '3.png', '4.png', '5.png'].map(bg => (
-                <button 
-                  key={bg} 
-                  onClick={() => setSelectedBackground(bg)}
-                  className={selectedBackground === bg ? 'active' : ''}
-                  style={{ padding: '6px 16px', fontSize: '0.9rem' }}
-                >
-                  Option {bg[0]}
-                </button>
-              ))}
-            </div>
-            
-            {/* Canvas scaled visually while reserving original space */}
-            <div style={{ width: 450 * scale, height: 600 * scale, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          {/* Centre Column: Drawing Area */}
+          <div className="scrapbook-wrapper" style={{ 
+            display: 'flex', 
+            flexDirection: 'column', 
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}>
+            <div style={{ 
+              width: 450 * scale, 
+              height: 600 * scale, 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center',
+              boxShadow: '0 10px 30px rgba(0,0,0,0.1)',
+              borderRadius: '4px',
+              overflow: 'hidden'
+            }}>
               <div style={{ 
                 transform: `scale(${scale})`, 
                 transformOrigin: 'center center',
                 width: 450, 
                 height: 600 
               }}>
-                <div ref={canvasWrapperRef} style={{ width: 450, height: 600, position: 'relative', border: '1px solid #ddd', borderRadius: '4px', overflow: 'hidden' }}>
+                <div ref={canvasWrapperRef} style={{ width: 450, height: 600, position: 'relative', background: '#fff' }}>
                   <ScrapbookCanvas 
                     activeTool={activeTool} 
                     activeColor={activeColor}
@@ -286,7 +357,24 @@ export default function Scrapbook() {
                 </div>
               </div>
             </div>
+          </div>
 
+          {/* Right Column: Colors & Backgrounds */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', alignItems: 'center' }}>
+            <StationeryToolbar 
+              activeTool={activeTool}
+              setActiveTool={setActiveTool}
+              activeColor={activeColor}
+              setActiveColor={setActiveColor}
+              onClear={clearCanvas}
+              onAddElement={handleAddElement}
+              onUndo={handleUndo}
+              isMobile={isMobile}
+              selectedBackground={selectedBackground}
+              setSelectedBackground={setSelectedBackground}
+              showTools={false}
+              showPanel={true}
+            />
           </div>
         </div>
       )}

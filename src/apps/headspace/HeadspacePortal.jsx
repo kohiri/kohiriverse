@@ -135,7 +135,7 @@ export default function HeadspacePortal() {
       {/* ── UI Layer ── */}
       <main className="ui-layer">
         <button className="back-btn" onClick={() => navigate('/')}>
-          <ArrowLeft size={18} /> BACK TO GALAXY
+          <ArrowLeft size={14} /> BACK TO GALAXY
         </button>
         
         <header className="portal-header">

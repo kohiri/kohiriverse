@@ -98,7 +98,7 @@
 .headspace-theme .ui-layer {
   position: relative;
   z-index: 10;
-  padding: 80px 5% 80px;
+  padding: 110px 5% 80px;
   display: flex;
   flex-direction: column;
   gap: 50px;
@@ -107,27 +107,28 @@
 
 .headspace-theme .back-btn {
   position: absolute;
-  top: 60px;
+  top: 55px;
   left: 5%;
   background: var(--off-white);
-  border: var(--border-width) solid var(--deep-navy);
-  padding: 12px 24px;
+  border: calc(var(--border-width) / 2) solid var(--deep-navy);
+  padding: 6px 14px;
   border-radius: 50px;
   font-family: var(--font-heading);
   font-weight: 800;
+  font-size: 0.7rem;
   color: var(--deep-navy);
   cursor: pointer;
-  box-shadow: 4px 4px 0 var(--deep-navy);
+  box-shadow: 2px 2px 0 var(--deep-navy);
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   transition: var(--transition);
   z-index: 110;
 }
 
 .headspace-theme .back-btn:hover {
-  transform: translate(-4px, -4px);
-  box-shadow: 8px 8px 0 var(--deep-navy);
+  transform: translate(-2px, -2px);
+  box-shadow: 4px 4px 0 var(--deep-navy);
   background: var(--muted-yellow);
 }
 

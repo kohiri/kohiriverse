@@ -112,3 +112,15 @@ html, body, #root {
   transform: translateY(1px);
 }
 
+@media (max-width: 768px) {
+  .scrapbook-container {
+    border-radius: 0;
+    padding: 0 !important;
+    height: 100%;
+    overflow: auto;
+  }
+  .scrapbook-container button {
+    padding: 0.4em 0.8em;
+    font-size: 0.9em;
+  }
+}

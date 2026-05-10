@@ -51,6 +51,19 @@ export default function DeviceOrientationOverlay() {
           <p className="text-white/40 text-[10px] md:text-xs font-light tracking-[0.4em] uppercase">
             To Explore
           </p>
+
+          <button
+            onClick={() => {
+              if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                  console.error(`Error attempting to enable full-screen mode: ${err.message}`);
+                });
+              }
+            }}
+            className="mt-4 px-6 py-2.5 bg-white/10 hover:bg-white/20 border border-white/20 rounded-full text-white text-[10px] tracking-[0.2em] uppercase transition-all duration-300 backdrop-blur-xl active:scale-95"
+          >
+            Go Fullscreen
+          </button>
         </div>
       </div>
     </div>
