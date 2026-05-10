@@ -35,7 +35,7 @@ export default function DeviceOrientationOverlay() {
   return (
     <div 
       className="fixed inset-0 z-[9999] bg-black flex flex-col items-center justify-center p-8 text-center"
-      style={{ fontFamily: '"Outfit", sans-serif' }}
+      style={{ fontFamily: '"Outfit", sans-serif', height: '100dvh', width: '100dvw' }}
     >
       <div className="flex flex-col items-center gap-8">
         {/* Animated Phone Icon */}

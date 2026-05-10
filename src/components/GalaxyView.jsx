@@ -24,17 +24,6 @@ function GalaxyView() {
     return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
   }, []);
 
-  const handleStarSelect = (star) => {
-    setSelectedStar(star);
-    if (star) {
-      if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen().catch(err => {
-          console.error(`Error attempting to enable full-screen mode: ${err.message}`);
-        });
-      }
-    }
-  };
-
   const toggleFullscreen = () => {
     if (!document.fullscreenElement) {
       document.documentElement.requestFullscreen().catch(err => {
@@ -100,7 +89,7 @@ function GalaxyView() {
       {selectedStar?.id !== 'star_2' && (
         <GalaxyCanvas
           selectedStar={selectedStar}
-          setSelectedStar={handleStarSelect}
+          setSelectedStar={setSelectedStar}
           galaxyData={galaxyData}
           setGalaxyData={setGalaxyData}
           setIsDragging={() => {}} // Placeholder or real state if needed
@@ -171,7 +160,10 @@ function GalaxyView() {
                     <button
                       key={star.id}
                       onClick={() => {
-                        handleStarSelect(star)
+                        if (window.innerWidth <= 1024 && !document.fullscreenElement) {
+                          document.documentElement.requestFullscreen().catch(err => console.log(err));
+                        }
+                        setSelectedStar(star)
                         setShowOrbList(false)
                         setSearchQuery('')
                       }}

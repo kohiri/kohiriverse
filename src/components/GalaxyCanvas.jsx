@@ -1,4 +1,4 @@
-import { Suspense, useRef, useEffect, useState } from 'react'
+import React, { Suspense, useRef, useEffect, useState } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { CameraControls } from '@react-three/drei'
 import StarsField from './StarsField'
@@ -8,6 +8,9 @@ import CustomStarfield from './CustomStarfield'
 import { EffectComposer, Bloom } from '@react-three/postprocessing'
 import Constellation from './Constellation'
 import * as THREE from 'three'
+
+import geminiTexture from '../../public/textures/gemini_silhouette.png'
+import sagittariusTexture from '../../public/textures/sagittarius_silhouette.png'
 
 // --- Constellation Data Configuration ---
 const geminiStars = [
@@ -128,7 +131,7 @@ export default function GalaxyCanvas({
               name="Gemini"
               stars={geminiStars}
               connections={geminiConnections}
-              textureUrl="/textures/gemini_silhouette.png"
+              textureUrl={geminiTexture}
               position={[-200, 150, -500]}
               rotation={[0.2, 0.4, 0]}
               scale={10}
@@ -137,7 +140,7 @@ export default function GalaxyCanvas({
               name="Sagittarius"
               stars={sagittariusStars}
               connections={sagittariusConnections}
-              textureUrl="/textures/sagittarius_silhouette.png"
+              textureUrl={sagittariusTexture}
               position={[250, -100, -600]}
               rotation={[-0.1, -0.3, 0.2]}
               scale={12}

@@ -1,23 +1,38 @@
+import textureKush from '../../public/textures/kush.jpg';
+import textureOrb2 from '../../public/textures/orb_02.jpg';
+import textureOrb3 from '../../public/textures/orb_03.jpg';
+import textureOrb4 from '../../public/textures/orb_04.jpg';
+import textureOrb5 from '../../public/textures/orb_5.jpg';
+import textureOrb6 from '../../public/textures/orb_6.jpg';
+import textureOrb7 from '../../public/textures/orb_7.jpg';
+import textureOrb8 from '../../public/textures/orb_8.jpg';
+import textureOrb9 from '../../public/textures/orb_9.jpg';
+import textureOrb10 from '../../public/textures/orb_10.jpg';
+import textureOrb11 from '../../public/textures/orb_11.jpg';
+import textureOrb12 from '../../public/textures/orb_12.jpg';
+import textureOrb13 from '../../public/textures/orb_13.jpg';
+import textureOrb14 from '../../public/textures/orb_14.jpg';
+
 // 14 orbs with random positions in 3D space
 // Neon colors for a vibrant aesthetic
 
 // Texture pool — 14 slots, one per orb (in order of creation).
 // Add your custom art filenames here as you create them.
 const TEXTURE_POOL = [
-  '/textures/kush.jpg',   // Orb 1 (Kush)
-  '/textures/orb_02.jpg', // Orb 2
-  '/textures/orb_03.jpg', // Orb 3
-  '/textures/orb_04.jpg', // Orb 4
-  '/textures/orb_5.jpg',  // Orb 5
-  '/textures/orb_6.jpg',  // Orb 6
-  '/textures/orb_7.jpg',  // Orb 7
-  '/textures/orb_8.jpg',  // Orb 8
-  '/textures/orb_9.jpg',  // Orb 9
-  '/textures/orb_10.jpg', // Orb 10
-  '/textures/orb_11.jpg', // Orb 11
-  '/textures/orb_12.jpg', // Orb 12
-  '/textures/orb_13.jpg', // Orb 13
-  '/textures/orb_14.jpg', // Orb 14
+  textureKush,   // Orb 1 (Kush)
+  textureOrb2,   // Orb 2
+  textureOrb3,   // Orb 3
+  textureOrb4,   // Orb 4
+  textureOrb5,   // Orb 5
+  textureOrb6,   // Orb 6
+  textureOrb7,   // Orb 7
+  textureOrb8,   // Orb 8
+  textureOrb9,   // Orb 9
+  textureOrb10,  // Orb 10
+  textureOrb11,  // Orb 11
+  textureOrb12,  // Orb 12
+  textureOrb13,  // Orb 13
+  textureOrb14,  // Orb 14
 ];
 
 const colors = [

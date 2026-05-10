@@ -21,7 +21,13 @@ export default function StarsField({ onStarClick, galaxyData, setGalaxyData, set
             name={star.name}
             texture={star.texture}
             // Use onPointerDown/Up to detect a tap if onClick is being swallowed by DragControls
-            onClick={() => onStarClick && onStarClick(star)}
+            onClick={() => {
+              // Auto fullscreen on mobile when entering a planet
+              if (window.innerWidth <= 1024 && !document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => console.log(err));
+              }
+              if (onStarClick) onStarClick(star);
+            }}
           />
         </DragControls>
       ))}
