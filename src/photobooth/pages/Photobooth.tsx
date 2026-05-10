@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "./Photobooth.css";
 import "./styles.css"
 import { PhotoData } from "./Photostrip";
+import BackButton from "../components/BackButton";
 
 const Photobooth: React.FC = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -116,6 +117,7 @@ const Photobooth: React.FC = () => {
 
   return (
     <div className="photobooth-wrapper">
+      <BackButton />
       <div className="photo-strip">
         {photos.map((photo, idx) => (
           <div key={idx} className="photo-placeholder">

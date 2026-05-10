@@ -23,7 +23,7 @@ export default function AlbumModal({ selectedStar, onClose }) {
         {/* Close Button */}
         <button 
           onClick={onClose}
-          className="absolute top-2 right-2 md:top-4 md:right-4 p-2 text-white/60 hover:text-white transition-colors z-10"
+          className="absolute top-2 right-2 md:top-3 md:right-3 p-2 bg-black/40 hover:bg-black/60 border border-white/20 rounded-full text-white transition-all z-50 shadow-lg"
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 md:h-6 md:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />

@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from "react";
+import BackButton from "../components/BackButton";
 
 function Gallery () {
     const [photos, setPhotos] = useState([]);
@@ -17,7 +18,8 @@ function Gallery () {
         fetchPhotos();
     }, []);
 
-    return (<div className="container">
+    return (<div className="container" style={{ position: 'relative' }}>
+        <BackButton />
         {photos.length === 0 && <p>No photos saved yet</p>}
         {photos.map((photo, idx) => (
             <img 

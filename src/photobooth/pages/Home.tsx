@@ -3,6 +3,7 @@ import './Home.css';
 import { useNavigate } from 'react-router-dom';
 import ShareIcon from "../../assets/images/share-icon.svg?react";
 import FeedbackIcon from "../../assets/images/feedback-icon.svg?react";
+import BackButton from '../components/BackButton';
 
 
 
@@ -286,6 +287,7 @@ function Home() {
 
   return (
     <div className="background-container">
+      <BackButton to="/" />
 
       <div className="info-container">
         <button onClick={handleShare} style={{background: "transparent", border: "none", cursor: "pointer"}}>

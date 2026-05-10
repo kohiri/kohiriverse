@@ -9,7 +9,7 @@ import { error, time } from "console";
 import printIcon from "../../assets/images/print_icon.png"
 
 import ShareIcon from "../../assets/images/share-icon.svg?react";
-
+import BackButton from "../components/BackButton";
 const Result: React.FC = () => {
   const { state } = useLocation();
   const photos: any[] = state?.photos ?? [];
@@ -178,10 +178,11 @@ const Result: React.FC = () => {
 
   return (
     <div className="result-wrapper">
-      {/* home button */}
-      <div style={{display: "flex", top: "20px", left: "16px", gap: "5px", alignItems: "center", position: "absolute"}}>
+      {/* back & home buttons */}
+      <div style={{display: "flex", top: "20px", left: "16px", gap: "5px", alignItems: "center", position: "absolute", zIndex: 100}}>
+        <BackButton style={{ position: 'relative', top: 'auto', left: 'auto' }} />
         <button onClick={handleReturnHome} 
-                style={{background: "transparent", border: "none", cursor: "pointer"}}> 
+                style={{background: "transparent", border: "none", cursor: "pointer", padding: "0"}}> 
           <HouseIcon width={35} height={35} style={{ fill: "var(--color-pink)" }} />
         </button>
 

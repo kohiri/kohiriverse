@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Photostrip.css';
+import BackButton from '../components/BackButton';
 
 export interface PhotoData {
   url: string;
@@ -48,6 +49,7 @@ function Photostrip() {
 
   return (
     <div className="photostrip-container">
+      <BackButton />
       <div className="text-holder">Upload Your Photos</div>
   
       <div className="photos-holders">

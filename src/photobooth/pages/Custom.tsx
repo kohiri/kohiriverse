@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import "./Custom.css";
 import html2canvas from "html2canvas";
 import { PhotoData } from "./Photostrip";
+import BackButton from "../components/BackButton";
 
 export const bgOptions = [
   { name: "White", style: { background: "#fff", color: "#000" } },
@@ -157,6 +158,7 @@ const Custom: React.FC = () => {
 
   return (
     <div className="customize-wrapper">
+      <BackButton />
       {/* Left side */}
       <div className="customize-left">
         <div className="text">Decorate ♥</div>
