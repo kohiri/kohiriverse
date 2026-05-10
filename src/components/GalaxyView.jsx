@@ -77,7 +77,7 @@ function GalaxyView() {
   }, [selectedStar, navigate])
 
   return (
-    <div className="w-full h-screen bg-black relative overflow-hidden" style={{ fontFamily: '"Outfit", sans-serif' }}>
+    <div className="w-full h-[100dvh] bg-black relative overflow-hidden" style={{ fontFamily: '"Outfit", sans-serif' }}>
       <audio 
         ref={audioRef} 
         src="/02 Cornfield Chase.mp3" 
