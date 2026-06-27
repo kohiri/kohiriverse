@@ -85,8 +85,10 @@ In this way, the need for screens or sound is less about distraction and more ab
 References:
 Hayes, S. C., Wilson, K. G., Gifford, E. V., Follette, V. M., & Strosahl, K. (1996). Experiential avoidance and behavioral disorders: A functional dimensional approach. Journal of Consulting and Clinical Psychology.
 Raichle, M. E. (2015). The brain's default mode network. Annual Review of Neuroscience.`
-  },
-  {
+  }
+];
+
+const NIETZSCHE_TOPIC =   {
     id: 11,
     title: 'Friedrich Nietzsche: Genius, Existential Icon... and a Walking Red Flag?',
     image: '/assets/headspace/nietzsche_superman.png',
@@ -209,8 +211,7 @@ And if Nietzsche were alive today, I have a feeling we'd have one very long conv
 I'd thank him for teaching us to question everything.
 
 Then I'd politely ask why he forgot to question himself...Axxhole`
-  }
-];
+  };
 
 function ResearchCard({ topic, onOpen }) {
   return (
@@ -274,6 +275,9 @@ export default function HeadspacePortal() {
         <div className="bento-grid">
           <div className="scale-column">
             <Questionnaire onComplete={handleComplete} />
+            <div style={{ marginTop: '48px' }}>
+              <ResearchCard topic={NIETZSCHE_TOPIC} onOpen={setActiveTopic} />
+            </div>
           </div>
           <div className="research-column">
             {RESEARCH_TOPICS.map(topic => (
