@@ -275,7 +275,7 @@ export default function HeadspacePortal() {
         <div className="bento-grid">
           <div className="scale-column">
             <Questionnaire onComplete={handleComplete} />
-            <div style={{ marginTop: '48px' }}>
+            <div style={{ marginTop: '48px', display: 'grid', gridTemplateColumns: 'minmax(300px, 350px)' }}>
               <ResearchCard topic={NIETZSCHE_TOPIC} onOpen={setActiveTopic} />
             </div>
           </div>
