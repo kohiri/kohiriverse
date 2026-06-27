@@ -208,7 +208,7 @@ And if Nietzsche were alive today, I have a feeling we'd have one very long conv
 
 I'd thank him for teaching us to question everything.
 
-Then I'd politely ask why he forgot to question himself...Axxhole\`
+Then I'd politely ask why he forgot to question himself...Axxhole`
   }
 ];
 
