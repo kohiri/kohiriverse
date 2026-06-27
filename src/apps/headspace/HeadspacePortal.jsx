@@ -85,6 +85,130 @@ In this way, the need for screens or sound is less about distraction and more ab
 References:
 Hayes, S. C., Wilson, K. G., Gifford, E. V., Follette, V. M., & Strosahl, K. (1996). Experiential avoidance and behavioral disorders: A functional dimensional approach. Journal of Consulting and Clinical Psychology.
 Raichle, M. E. (2015). The brain's default mode network. Annual Review of Neuroscience.`
+  },
+  {
+    id: 11,
+    title: 'Friedrich Nietzsche: Genius, Existential Icon... and a Walking Red Flag?',
+    image: '/assets/headspace/nietzsche_superman.png',
+    featured: false,
+    desc: 'An exploration of Friedrich Nietzsche\'s brilliant philosophy and his deeply flawed personal views, exploring the contradictions of a legendary thinker.',
+    content: `I'll admit it—I first discovered Friedrich Nietzsche the same way most people probably do. Getting triggered!!! Also you know the dramatic social media content: cinematic music, black-and-white footage, a guy staring into the distance, and a Nietzsche quote about suffering or becoming stronger. Everyone in the comments is acting like they've just unlocked the secret to life, so naturally I thought, *"Okay... who is this man, and why does the internet worship him?"*
+
+So, I did what any curious person would do.
+
+I actually read Nietzsche.
+
+And let me tell you... it was an emotional rollercoaster.
+
+One moment I was highlighting every other sentence, convinced this man was centuries ahead of his time. The next moment, I was staring at the page thinking, *"Sir... what exactly do you have against women?"*
+
+Welcome to the wonderfully confusing world of Friedrich Nietzsche.
+
+Born in Germany in 1844, Nietzsche wasn't just intelligent, he was ridiculously intelligent. He became a university professor at the age of twenty four, which is honestly offensive considering what most of us were doing at twenty four. While everyone else was trying to figure out adulthood, Nietzsche was teaching ancient Greek texts and casually questioning the foundations of Western philosophy. Religion? Question it. Morality? Question it. Society? Absolutely question it. Truth itself? that too.
+
+Honestly, the man woke up every morning and chose philosophical violence.
+
+His biggest message was surprisingly simple: stop living the life everyone else expects you to live. Create your own values. Think for yourself. Stop following the crowd just because it's comfortable. He believed that life doesn't come with a built in meaning, you create that meaning yourself. His famous idea of the *Übermensch*, often translated as the "Overman," wasn't about becoming a superhero or being born superior to everyone else. It was about constantly becoming a better version of yourself, pushing past your limitations, and refusing to settle for mediocrity.
+
+And honestly?
+
+That part still holds up.
+
+Even today.
+
+But then...
+
+He started talking about women.
+
+Now here's where I had to keep putting the book down every few pages.
+
+You're telling me the same man who encouraged humanity to question every belief society handed to them... never stopped to question his own beliefs about women?
+
+That's almost impressive.
+
+Nietzsche often described women as emotional, manipulative, irrational, and naturally suited for motherhood rather than intellectual life. Then there's his infamous line: *"Are you going to women? Do not forget the whip."*
+
+Excuse me?
+
+The Man who challenged god but couldn't challenge patriarchy....
+
+Now, to be fair, and because history deserves fairness...that quote has been debated for decades. Some philosophers argue it's metaphorical. Others point out it's spoken by a fictional character in one of his books rather than Nietzsche directly. Context matters. But even after giving him every possible benefit of the doubt, many of his writings still reflect deeply sexist assumptions about women.
+
+And that's what fascinated me the most.
+
+How can someone be so revolutionary in one area of life and so conventional in another?
+
+It just goes to show that intelligence doesn't magically erase bias. A person can completely redefine philosophy while still carrying the prejudices of the century they were born into.
+
+Then I started looking into his life, and suddenly everything became... not clearer, exactly, but definitely more interesting.
+
+Nietzsche wasn't some charismatic public intellectual surrounded by admirers. In reality, his life was surprisingly lonely. He suffered from chronic migraines, severe vision problems, and constant physical pain that eventually forced him to retire from teaching. He spent years travelling alone through Europe, writing books that almost nobody bought during his lifetime. Imagine pouring your soul into your work, convinced you've written something extraordinary, only for the world to collectively shrug.
+
+That has to sting.
+
+Then there's his love life, or rather, the lack of one.
+
+His most famous romantic interest was Lou Andreas-Salomé, one of the most brilliant women of the nineteenth century. Independent, intellectual, ambitious; basically everything Nietzsche admired.
+
+He proposed.
+
+She said no.
+
+He proposed again.
+
+She... still said no.
+
+Ouch.
+
+Now, before anyone says, "See! That's why he hated women!"—no. Human beings are much more complicated than that. One rejection doesn't suddenly create an entire worldview. But it does make you wonder how much our personal disappointments quietly influence the stories we tell ourselves about other people.
+
+One thing I found almost ironic was that Nietzsche spent so much time writing about strength, independence, and overcoming suffering, yet his own life was filled with illness, loneliness, broken friendships, and disappointment. Maybe that's exactly why those ideas mattered so much to him. Sometimes our philosophies aren't just theories, they're survival mechanisms.
+
+And then, just when I thought Nietzsche's story couldn't get any more dramatic...
+
+History entered the chat.
+
+One of the biggest misconceptions about Nietzsche is that he was the philosopher behind Hitler and Nazi ideology.
+
+Not exactly.
+
+Here's what actually happened.
+
+Nietzsche openly criticized antisemitism. He disliked aggressive nationalism. He distrusted governments that demanded blind obedience. Those aren't exactly ideas that fit comfortably with Nazism.
+
+The problem is that Nietzsche never got the chance to defend his work.
+
+In 1889, he suffered a devastating mental collapse after years of declining health. He never fully recovered and spent the last years of his life unable to write or explain his philosophy. After that, control of his unpublished writings largely passed to his sister, Elisabeth Förster-Nietzsche.
+
+And let's just say...
+
+She and her brother would not have gotten along politically.
+
+Elisabeth admired German nationalism and held antisemitic views. She edited, rearranged, and selectively published many of Nietzsche's unpublished notes, presenting them in ways that made his philosophy appear much closer to nationalist and authoritarian thinking than it actually was.
+
+Years later, Adolf Hitler and the Nazi Party embraced this version of Nietzsche. They took concepts like the *Übermensch* and the "will to power," stripped away all their philosophical context, and reshaped them into propaganda. Nietzsche's idea of the *Übermensch* was about personal growth and overcoming yourself, not about race. Yet the Nazis transformed it into the myth of the Aryan "master race." His idea of the "will to power" became military conquest and domination instead of personal transformation.
+
+It's honestly one of history's greatest examples of taking someone's work completely out of context.
+
+If there's one lesson to take from that, it's this: people don't always misuse ideas by inventing new ones. Sometimes they simply cherry pick the parts they like and ignore everything else.
+
+Looking back, Nietzsche feels less like an untouchable genius and more like a fascinating contradiction. He challenged religion, morality, and society, yet often failed to challenge his own assumptions about women. He encouraged people to think independently, but after his death, his own ideas were manipulated by people who stood for everything he criticized. He spent his life writing about strength while privately battling illness and isolation. He wanted people to become extraordinary, yet he remained painfully human.
+
+Maybe that's why people are still reading him over a century later.
+
+Not because he was always right.
+
+Definitely not because he was perfect.
+
+But because the best philosophers aren't the ones who give us all the answers.
+
+They're the ones who make us argue back.
+
+And if Nietzsche were alive today, I have a feeling we'd have one very long conversation.
+
+I'd thank him for teaching us to question everything.
+
+Then I'd politely ask why he forgot to question himself...Axxhole\`
   }
 ];
 
