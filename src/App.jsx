@@ -4,6 +4,7 @@ import PhotoboothApp from './photobooth/PhotoboothApp'
 import StudioApp from './studio/StudioApp'
 import HeadspacePortal from './apps/headspace/HeadspacePortal'
 import SpookyGame from './apps/spooky/SpookyGame'
+import ArtGalleryApp from './apps/art-gallery/ArtGalleryApp'
 import { useNavigate } from 'react-router-dom'
 import DeviceOrientationOverlay from './components/DeviceOrientationOverlay'
 
@@ -17,6 +18,7 @@ function App() {
         <Route path="/studio/*" element={<StudioApp />} />
         <Route path="/headspace/*" element={<HeadspacePortal />} />
         <Route path="/spooky" element={<SpookyGameWrapper />} />
+        <Route path="/art-gallery" element={<ArtGalleryApp />} />
       </Routes>
     </>
   )

@@ -97,6 +97,7 @@ const generateStars = () => {
             orbIndex === 7 ? 'Headspace' : 
             orbIndex === 8 ? 'Sound Studio' : 
             orbIndex === 11 ? 'Spooky' :
+            orbIndex === 13 ? 'Art Gallery' :
             `Album ${orbIndex + 1}`,
       position,
       color,

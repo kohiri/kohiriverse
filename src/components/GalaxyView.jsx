@@ -76,6 +76,14 @@ function GalaxyView() {
     }
   }, [selectedStar, navigate])
 
+  // Handle Art Gallery navigation (Album 14 / star_13)
+  useEffect(() => {
+    if (selectedStar?.id === 'star_13') {
+      navigate('/art-gallery')
+      setSelectedStar(null)
+    }
+  }, [selectedStar, navigate])
+
   return (
     <div className="w-full h-[100dvh] bg-black relative overflow-hidden" style={{ fontFamily: '"Outfit", sans-serif' }}>
       <audio 
@@ -229,7 +237,7 @@ function GalaxyView() {
         </button>
       </div>
 
-      {selectedStar && selectedStar.id !== 'star_2' && selectedStar.id !== 'star_6' && selectedStar.id !== 'star_7' && selectedStar.id !== 'star_8' && selectedStar.id !== 'star_11' && (
+      {selectedStar && selectedStar.id !== 'star_2' && selectedStar.id !== 'star_6' && selectedStar.id !== 'star_7' && selectedStar.id !== 'star_8' && selectedStar.id !== 'star_11' && selectedStar.id !== 'star_13' && (
         <AlbumModal selectedStar={selectedStar} onClose={() => setSelectedStar(null)} />
       )}
 
