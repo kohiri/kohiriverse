@@ -6,7 +6,7 @@ export default function AlbumModal({ selectedStar, onClose }) {
   if (!selectedStar) return null;
 
   const isScrapbook = selectedStar.name === 'Scrapbook';
-  const isEmptyAlbum = ['Album 4', 'Album 13', 'Album 14'].includes(selectedStar.name);
+  const isEmptyAlbum = ['Album 4'].includes(selectedStar.name);
 
   return (
     <div className="absolute inset-0 flex items-center justify-center z-50 pointer-events-auto">

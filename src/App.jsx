@@ -5,6 +5,7 @@ import StudioApp from './studio/StudioApp'
 import HeadspacePortal from './apps/headspace/HeadspacePortal'
 import SpookyGame from './apps/spooky/SpookyGame'
 import ArtGalleryApp from './apps/art-gallery/ArtGalleryApp'
+import IdentityCardApp from './apps/identity-card/IdentityCardApp'
 import { useNavigate } from 'react-router-dom'
 import DeviceOrientationOverlay from './components/DeviceOrientationOverlay'
 
@@ -19,8 +20,19 @@ function App() {
         <Route path="/headspace/*" element={<HeadspacePortal />} />
         <Route path="/spooky" element={<SpookyGameWrapper />} />
         <Route path="/art-gallery" element={<ArtGalleryApp />} />
+        <Route path="/identity-card/*" element={<IdentityCardWrapper />} />
+        <Route path="/album-13/*" element={<IdentityCardWrapper />} />
       </Routes>
     </>
+  )
+}
+
+function IdentityCardWrapper() {
+  const navigate = useNavigate()
+  return (
+    <div style={{ position: 'fixed', inset: 0, zIndex: 50, background: '#171317', overflowY: 'auto' }}>
+      <IdentityCardApp onBack={() => navigate('/')} />
+    </div>
   )
 }
 

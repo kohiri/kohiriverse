@@ -76,6 +76,14 @@ function GalaxyView() {
     }
   }, [selectedStar, navigate])
 
+  // Handle Identity Card navigation (Album 13 / star_12)
+  useEffect(() => {
+    if (selectedStar?.id === 'star_12') {
+      navigate('/identity-card')
+      setSelectedStar(null)
+    }
+  }, [selectedStar, navigate])
+
   // Handle Art Gallery navigation (Album 14 / star_13)
   useEffect(() => {
     if (selectedStar?.id === 'star_13') {
