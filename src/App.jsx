@@ -30,7 +30,18 @@ function App() {
 function IdentityCardWrapper() {
   const navigate = useNavigate()
   return (
-    <div style={{ position: 'fixed', inset: 0, zIndex: 50, background: '#171317', overflowY: 'auto' }}>
+    <div
+      style={{
+        position: 'fixed',
+        inset: 0,
+        zIndex: 50,
+        background: '#171317',
+        overflowY: 'auto',
+        overflowX: 'hidden',
+        WebkitOverflowScrolling: 'touch',
+        overscrollBehaviorY: 'contain'
+      }}
+    >
       <IdentityCardApp onBack={() => navigate('/')} />
     </div>
   )

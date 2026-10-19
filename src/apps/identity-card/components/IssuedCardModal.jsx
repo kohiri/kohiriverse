@@ -1,19 +1,17 @@
 import React, { useEffect, useRef, useState } from 'react';
 import confetti from 'canvas-confetti';
 import { toPng } from 'html-to-image';
-import { Download, Bookmark, Edit3, PlusCircle, CheckCircle, Share2, Sparkles } from 'lucide-react';
+import { Download, Edit3, PlusCircle, Sparkles } from 'lucide-react';
 import CardRenderer from './CardRenderer';
 
 export default function IssuedCardModal({
   cardData,
   templateId,
   onEdit,
-  onCreateNew,
-  onSaveToGallery
+  onCreateNew
 }) {
   const cardRef = useRef(null);
   const [isDownloading, setIsDownloading] = useState(false);
-  const [isSaved, setIsSaved] = useState(false);
 
   const stageRef = useRef(null);
   const [containerWidth, setContainerWidth] = useState(0);
@@ -111,16 +109,6 @@ export default function IssuedCardModal({
     }
   };
 
-  const handleSave = () => {
-    onSaveToGallery({
-      ...cardData,
-      templateId,
-      issuedAt: new Date().toISOString()
-    });
-    setIsSaved(true);
-    setTimeout(() => setIsSaved(false), 3000);
-  };
-
   return (
     <div className="issued-stage-container">
       <div className="issued-header-banner">
@@ -153,22 +141,6 @@ export default function IssuedCardModal({
         >
           <Download size={18} />
           {isDownloading ? "Generating PNG..." : "Download as Image (PNG)"}
-        </button>
-
-        <button
-          type="button"
-          className={`action-btn save-btn ${isSaved ? 'saved' : ''}`}
-          onClick={handleSave}
-        >
-          {isSaved ? (
-            <>
-              <CheckCircle size={18} /> Saved to Collection!
-            </>
-          ) : (
-            <>
-              <Bookmark size={18} /> Save Card
-            </>
-          )}
         </button>
 
         <button

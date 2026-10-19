@@ -1013,26 +1013,33 @@
 .cropper-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(0, 0, 0, 0.85);
   backdrop-filter: blur(8px);
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
   z-index: 1000;
-  padding: 1rem;
+  padding: 1.5rem 1rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
 }
 
 .cropper-card {
+  margin: auto;
   background: #1e181e;
   border: 2px solid var(--color-aqua);
   border-radius: 20px;
-  padding: 1.5rem;
+  padding: 1.4rem;
   width: 100%;
-  max-width: 440px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+  max-width: 450px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
   display: flex;
   flex-direction: column;
   align-items: center;
+  position: relative;
+  flex-shrink: 0;
 }
 
 .cropper-header {
@@ -1040,13 +1047,13 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.35rem;
 }
 
 .cropper-header h3 {
   font-family: var(--font-heading);
   color: var(--color-mint);
-  font-size: 1.2rem;
+  font-size: 1.18rem;
 }
 
 .cropper-close-btn {
@@ -1054,23 +1061,101 @@
   border: none;
   color: var(--color-aqua);
   cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .cropper-instruction {
   font-size: 0.8rem;
   color: var(--color-aqua);
-  margin-bottom: 1rem;
+  margin-bottom: 0.8rem;
   text-align: center;
 }
 
+.cropper-body-grid {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.cropper-viewport-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
 .cropper-viewport-container {
-  width: 260px;
   border-radius: 12px;
   border: 2px solid var(--color-mint);
   position: relative;
   overflow: hidden;
   background: #120e12;
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+  max-width: 100%;
+}
+
+.cropper-controls-col {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Landscape Mode for mobile/short screens (e.g. 800x360 Samsung Galaxy A55) */
+.cropper-card.landscape-mode {
+  max-width: 620px;
+  padding: 0.85rem 1.25rem;
+}
+
+.cropper-card.landscape-mode .cropper-header {
+  margin-bottom: 0.2rem;
+}
+
+.cropper-card.landscape-mode .cropper-header h3 {
+  font-size: 1.05rem;
+}
+
+.cropper-card.landscape-mode .cropper-instruction {
+  margin-bottom: 0.45rem;
+  font-size: 0.72rem;
+}
+
+.cropper-card.landscape-mode .cropper-body-grid {
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 1.2rem;
+  width: 100%;
+}
+
+.cropper-card.landscape-mode .cropper-viewport-wrap {
+  width: auto;
+  flex-shrink: 0;
+}
+
+.cropper-card.landscape-mode .cropper-controls-col {
+  flex: 1;
+  min-width: 200px;
+  max-width: 320px;
+}
+
+.cropper-card.landscape-mode .cropper-presets-row {
+  margin-top: 0;
+  margin-bottom: 0.35rem;
+  gap: 6px;
+}
+
+.cropper-card.landscape-mode .cropper-controls {
+  margin: 0.35rem 0 0.7rem;
+  gap: 6px;
+}
+
+.cropper-card.landscape-mode .cropper-actions {
+  margin-top: 0.2rem;
 }
 
 .cropper-mask {
@@ -2293,8 +2378,8 @@ html, body {
   }
 
   .form-input {
-    padding: 0.65rem 0.85rem;
-    font-size: 0.9rem;
+    padding: 0.75rem 0.85rem;
+    font-size: 16px; /* Prevents auto-zoom on mobile */
   }
 
   .issued-actions-panel {
@@ -2315,7 +2400,7 @@ html, body {
 
   .cropper-card {
     max-width: calc(100vw - 20px);
-    padding: 1rem 0.75rem;
+    padding: 1.1rem 0.85rem;
     border-radius: 16px;
   }
 
@@ -2331,7 +2416,7 @@ html, body {
 
   .preset-pill-btn {
     font-size: 0.68rem;
-    padding: 3px 8px;
+    padding: 4px 8px;
   }
 }
 
@@ -2359,7 +2444,7 @@ html, body {
   }
 
   .studio-main-body {
-    padding: 1rem 0.6rem 2.5rem;
+    padding: 1rem 0.6rem 6rem;
   }
 
   .photo-upload-row {
@@ -2395,8 +2480,59 @@ html, body {
     flex: 1 1 40%;
     text-align: center;
   }
+}
 
-  .cropper-viewport-container {
-    width: 240px;
+/* Landscape Mode on mobile screens (e.g. 800x360 Samsung Galaxy A55) */
+@media (max-height: 560px) and (min-width: 480px) {
+  .cropper-card {
+    max-width: 620px;
+    padding: 0.8rem 1.2rem;
+  }
+
+  .cropper-header {
+    margin-bottom: 0.2rem;
+  }
+
+  .cropper-header h3 {
+    font-size: 1.05rem;
+  }
+
+  .cropper-instruction {
+    margin-bottom: 0.4rem;
+    font-size: 0.72rem;
+  }
+
+  .cropper-body-grid {
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 1.2rem;
+    width: 100%;
+  }
+
+  .cropper-viewport-wrap {
+    width: auto;
+    flex-shrink: 0;
+  }
+
+  .cropper-controls-col {
+    flex: 1;
+    min-width: 200px;
+    max-width: 320px;
+  }
+
+  .cropper-presets-row {
+    margin-top: 0;
+    margin-bottom: 0.35rem;
+    gap: 6px;
+  }
+
+  .cropper-controls {
+    margin: 0.3rem 0 0.65rem;
+    gap: 6px;
+  }
+
+  .cropper-actions {
+    margin-top: 0.2rem;
   }
 }

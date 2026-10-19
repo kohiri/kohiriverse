@@ -13,8 +13,52 @@ export default function PhotoCropperModal({ rawImageSrc, onConfirm, onCancel, ta
   const viewportRef = useRef(null);
   const touchDistRef = useRef(null);
 
-  const viewportWidth = 260;
-  const viewportHeight = Math.round(260 / targetAspect);
+  // Responsive window tracking
+  const [windowDimensions, setWindowDimensions] = useState(() => ({
+    width: typeof window !== 'undefined' ? window.innerWidth : 1200,
+    height: typeof window !== 'undefined' ? window.innerHeight : 800
+  }));
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowDimensions({
+        width: window.innerWidth,
+        height: window.innerHeight
+      });
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const isShortScreen = windowDimensions.height <= 560;
+  const isLandscapeMobile = windowDimensions.width > windowDimensions.height && windowDimensions.height <= 560;
+
+  // Dynamically compute viewport size to strictly fit available screen height/width
+  const computeViewportSize = () => {
+    let maxW, maxH;
+    if (isLandscapeMobile) {
+      maxH = Math.min(220, Math.max(130, windowDimensions.height - 110));
+      maxW = Math.min(280, Math.max(130, Math.floor(windowDimensions.width * 0.4)));
+    } else if (isShortScreen) {
+      maxH = Math.min(200, Math.max(130, windowDimensions.height - 180));
+      maxW = Math.min(240, Math.max(140, windowDimensions.width - 64));
+    } else {
+      maxW = Math.min(260, Math.max(160, windowDimensions.width - 64));
+      maxH = Math.min(320, Math.max(180, Math.floor(windowDimensions.height * 0.4)));
+    }
+
+    if (maxW / targetAspect <= maxH) {
+      const w = Math.round(maxW);
+      const h = Math.round(maxW / targetAspect);
+      return { width: w, height: h };
+    } else {
+      const h = Math.round(maxH);
+      const w = Math.round(maxH * targetAspect);
+      return { width: w, height: h };
+    }
+  };
+
+  const { width: viewportWidth, height: viewportHeight } = computeViewportSize();
 
   // Measure natural dimensions when image loads
   const handleImageLoad = (e) => {
@@ -42,7 +86,7 @@ export default function PhotoCropperModal({ rawImageSrc, onConfirm, onCancel, ta
   // Zoom value needed to show the entire photo without any cropping
   const fitZoom = coverScale > 0 ? parseFloat((containScale / coverScale).toFixed(2)) : 0.8;
 
-  // Non-passive mouse wheel zoom on the viewport
+  // Non-passive mouse wheel zoom only on the viewport
   useEffect(() => {
     const el = viewportRef.current;
     if (!el) return;
@@ -59,6 +103,17 @@ export default function PhotoCropperModal({ rawImageSrc, onConfirm, onCancel, ta
     el.addEventListener('wheel', onWheel, { passive: false });
     return () => el.removeEventListener('wheel', onWheel);
   }, []);
+
+  // Keyboard shortcut for escape
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        onCancel();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onCancel]);
 
   // Mouse drag handlers
   const handleMouseDown = (e) => {
@@ -171,8 +226,15 @@ export default function PhotoCropperModal({ rawImageSrc, onConfirm, onCancel, ta
   };
 
   return (
-    <div className="cropper-overlay" onMouseUp={handleMouseUp} onTouchEnd={handleTouchEnd}>
-      <div className="cropper-card">
+    <div
+      className="cropper-overlay"
+      onMouseUp={handleMouseUp}
+      onTouchEnd={handleTouchEnd}
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onCancel();
+      }}
+    >
+      <div className={`cropper-card ${isLandscapeMobile ? 'landscape-mode' : ''}`}>
         <div className="cropper-header">
           <h3>Adjust & Position Photo</h3>
           <button className="cropper-close-btn" onClick={onCancel} title="Close">
@@ -182,125 +244,140 @@ export default function PhotoCropperModal({ rawImageSrc, onConfirm, onCancel, ta
 
         <p className="cropper-instruction">
           <Move size={14} style={{ verticalAlign: 'middle', marginRight: 4 }} />
-          Drag to reposition photo • Scroll or slide to zoom
+          Drag photo to reposition • Pinch or slide to zoom
         </p>
 
-        {/* CROP VIEWPORT */}
-        <div
-          ref={viewportRef}
-          className="cropper-viewport-container"
-          style={{ height: `${viewportHeight}px`, cursor: isDragging ? 'grabbing' : 'grab' }}
-          onMouseDown={handleMouseDown}
-          onMouseMove={handleMouseMove}
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleTouchEnd}
-        >
-          <div className="cropper-mask">
-            <img
-              ref={imgRef}
-              src={rawImageSrc}
-              alt="Crop target"
-              onLoad={handleImageLoad}
-              draggable={false}
+        <div className="cropper-body-grid">
+          {/* CROP VIEWPORT */}
+          <div className="cropper-viewport-wrap">
+            <div
+              ref={viewportRef}
+              className="cropper-viewport-container"
               style={{
-                width: `${baseWidth}px`,
-                height: `${baseHeight}px`,
-                position: 'absolute',
-                left: '50%',
-                top: '50%',
-                transform: `translate(-50%, -50%) translate(${position.x}px, ${position.y}px) scale(${zoom})`,
-                transformOrigin: 'center center',
-                maxWidth: 'none',
-                maxHeight: 'none',
-                display: 'block',
-                pointerEvents: 'none'
+                width: `${viewportWidth}px`,
+                height: `${viewportHeight}px`,
+                cursor: isDragging ? 'grabbing' : 'grab',
+                touchAction: 'none'
               }}
-            />
+              onMouseDown={handleMouseDown}
+              onMouseMove={handleMouseMove}
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
+            >
+              <div className="cropper-mask">
+                <img
+                  ref={imgRef}
+                  src={rawImageSrc}
+                  alt="Crop target"
+                  onLoad={handleImageLoad}
+                  draggable={false}
+                  style={{
+                    width: `${baseWidth}px`,
+                    height: `${baseHeight}px`,
+                    position: 'absolute',
+                    left: '50%',
+                    top: '50%',
+                    transform: `translate(-50%, -50%) translate(${position.x}px, ${position.y}px) scale(${zoom})`,
+                    transformOrigin: 'center center',
+                    maxWidth: 'none',
+                    maxHeight: 'none',
+                    display: 'block',
+                    pointerEvents: 'none'
+                  }}
+                />
+              </div>
+
+              {/* 3x3 Rule-of-Thirds Grid Guide */}
+              <div className="cropper-grid-overlay">
+                <div className="grid-line horizontal h1"></div>
+                <div className="grid-line horizontal h2"></div>
+                <div className="grid-line vertical v1"></div>
+                <div className="grid-line vertical v2"></div>
+              </div>
+            </div>
           </div>
 
-          {/* 3x3 Rule-of-Thirds Grid Guide */}
-          <div className="cropper-grid-overlay">
-            <div className="grid-line horizontal h1"></div>
-            <div className="grid-line horizontal h2"></div>
-            <div className="grid-line vertical v1"></div>
-            <div className="grid-line vertical v2"></div>
+          {/* CONTROLS COLUMN */}
+          <div className="cropper-controls-col">
+            {/* QUICK PRESET CONTROLS */}
+            <div className="cropper-presets-row">
+              <button
+                type="button"
+                className="preset-pill-btn"
+                onClick={handleFitEntire}
+                title="Fit entire photo into frame"
+              >
+                <Maximize2 size={12} /> Fit Entire
+              </button>
+
+              <button
+                type="button"
+                className="preset-pill-btn"
+                onClick={handleFillFrame}
+                title="Fill frame edge-to-edge"
+              >
+                <Square size={12} /> Fill Frame
+              </button>
+
+              <button
+                type="button"
+                className="preset-pill-btn"
+                onClick={handleReset}
+                title="Reset position and zoom"
+              >
+                <RotateCcw size={12} /> Reset
+              </button>
+            </div>
+
+            {/* ZOOM SLIDER & BUTTON CONTROLS */}
+            <div className="cropper-controls">
+              <button
+                type="button"
+                className="ctrl-btn"
+                onClick={() => setZoom((z) => Math.max(0.25, parseFloat((z - 0.1).toFixed(2))))}
+                title="Zoom Out"
+                aria-label="Zoom Out"
+              >
+                <ZoomOut size={16} />
+              </button>
+
+              <input
+                type="range"
+                min="0.25"
+                max="3.5"
+                step="0.01"
+                value={zoom}
+                onChange={(e) => setZoom(parseFloat(e.target.value))}
+                className="zoom-slider"
+                aria-label="Zoom level"
+              />
+
+              <button
+                type="button"
+                className="ctrl-btn"
+                onClick={() => setZoom((z) => Math.min(3.5, parseFloat((z + 0.1).toFixed(2))))}
+                title="Zoom In"
+                aria-label="Zoom In"
+              >
+                <ZoomIn size={16} />
+              </button>
+
+              <span className="zoom-val-badge">
+                {Math.round(zoom * 100)}%
+              </span>
+            </div>
+
+            {/* ACTION BUTTONS */}
+            <div className="cropper-actions">
+              <button type="button" className="btn-secondary" onClick={onCancel}>
+                Cancel
+              </button>
+              <button type="button" className="btn-primary" onClick={handleCropAndSave}>
+                <Check size={18} style={{ marginRight: 6 }} /> Apply Crop
+              </button>
+            </div>
           </div>
-        </div>
-
-        {/* QUICK PRESET CONTROLS */}
-        <div className="cropper-presets-row">
-          <button
-            type="button"
-            className="preset-pill-btn"
-            onClick={handleFitEntire}
-            title="Fit entire photo into frame"
-          >
-            <Maximize2 size={12} /> Fit Entire
-          </button>
-
-          <button
-            type="button"
-            className="preset-pill-btn"
-            onClick={handleFillFrame}
-            title="Fill frame edge-to-edge"
-          >
-            <Square size={12} /> Fill Frame
-          </button>
-
-          <button
-            type="button"
-            className="preset-pill-btn"
-            onClick={handleReset}
-            title="Reset position and zoom"
-          >
-            <RotateCcw size={12} /> Reset
-          </button>
-        </div>
-
-        {/* ZOOM SLIDER & BUTTON CONTROLS */}
-        <div className="cropper-controls">
-          <button
-            type="button"
-            className="ctrl-btn"
-            onClick={() => setZoom((z) => Math.max(0.25, parseFloat((z - 0.1).toFixed(2))))}
-            title="Zoom Out"
-          >
-            <ZoomOut size={16} />
-          </button>
-
-          <input
-            type="range"
-            min="0.25"
-            max="3.5"
-            step="0.01"
-            value={zoom}
-            onChange={(e) => setZoom(parseFloat(e.target.value))}
-            className="zoom-slider"
-          />
-
-          <button
-            type="button"
-            className="ctrl-btn"
-            onClick={() => setZoom((z) => Math.min(3.5, parseFloat((z + 0.1).toFixed(2))))}
-            title="Zoom In"
-          >
-            <ZoomIn size={16} />
-          </button>
-
-          <span className="zoom-val-badge">
-            {Math.round(zoom * 100)}%
-          </span>
-        </div>
-
-        {/* ACTION BUTTONS */}
-        <div className="cropper-actions">
-          <button type="button" className="btn-secondary" onClick={onCancel}>
-            Cancel
-          </button>
-          <button type="button" className="btn-primary" onClick={handleCropAndSave}>
-            <Check size={18} style={{ marginRight: 6 }} /> Apply Crop
-          </button>
         </div>
       </div>
     </div>

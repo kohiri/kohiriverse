@@ -9,7 +9,6 @@ import {
   Check, 
   ArrowLeft, 
   ArrowRight, 
-  Bookmark, 
   Camera,
   Layers
 } from 'lucide-react';
@@ -19,7 +18,6 @@ import CardRenderer from './components/CardRenderer';
 import PhotoCropperModal from './components/PhotoCropperModal';
 import SignaturePad from './components/SignaturePad';
 import IssuedCardModal from './components/IssuedCardModal';
-import SavedCardsDrawer from './components/SavedCardsDrawer';
 import './styles/identity-card.css';
 
 // Random fictional ID number generator
@@ -63,16 +61,6 @@ export default function IdentityCardApp({ onBack }) {
   const [cropperOpen, setCropperOpen] = useState(false);
   const [rawImageForCrop, setRawImageForCrop] = useState(null);
 
-  // Saved cards collection (localStorage)
-  const [savedCards, setSavedCards] = useState(() => {
-    try {
-      const local = localStorage.getItem('galaxy_identity_cards');
-      return local ? JSON.parse(local) : [];
-    } catch {
-      return [];
-    }
-  });
-  const [savedDrawerOpen, setSavedDrawerOpen] = useState(false);
 
   // File input ref
   const fileInputRef = useRef(null);
@@ -160,48 +148,6 @@ export default function IdentityCardApp({ onBack }) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const handleSaveToGallery = () => {
-    const newCard = {
-      id: Date.now().toString(),
-      templateId: selectedTemplateId,
-      name: name || "AURA VALENTINE",
-      dob: dob || "2004 / 08 / 14",
-      contact: contact || "+1 800-GALAXY-99",
-      idNumber: idNumber || "69 69 69 69 69",
-      photo: photo,
-      signature: signature,
-      issuedAt: new Date().toLocaleDateString()
-    };
-    const updated = [newCard, ...savedCards];
-    setSavedCards(updated);
-    try {
-      localStorage.setItem('galaxy_identity_cards', JSON.stringify(updated));
-    } catch (err) {
-      console.warn("Storage quota exceeded", err);
-    }
-  };
-
-  const handleLoadSavedCard = (saved) => {
-    setSelectedTemplateId(saved.templateId);
-    setName(saved.name);
-    setDob(saved.dob);
-    setContact(saved.contact);
-    setIdNumber(saved.idNumber);
-    setPhoto(saved.photo);
-    setSignature(saved.signature);
-    setSavedDrawerOpen(false);
-    setCurrentStep('CUSTOMIZE');
-  };
-
-  const handleDeleteSavedCard = (cardId) => {
-    const updated = savedCards.filter(c => c.id !== cardId);
-    setSavedCards(updated);
-    try {
-      localStorage.setItem('galaxy_identity_cards', JSON.stringify(updated));
-    } catch (err) {
-      console.warn("Storage quota exceeded", err);
-    }
-  };
 
   const handleResetForNewCard = () => {
     setName('');
@@ -257,19 +203,7 @@ export default function IdentityCardApp({ onBack }) {
           <span className="brand-sub">Album 13 • Collectible Cards</span>
         </div>
 
-        <div className="navbar-actions">
-          <button
-            type="button"
-            className="btn-saved-collection"
-            onClick={() => setSavedDrawerOpen(true)}
-          >
-            <Bookmark size={16} />
-            <span>My Collection</span>
-            {savedCards.length > 0 && (
-              <span className="count-badge">{savedCards.length}</span>
-            )}
-          </button>
-        </div>
+
       </header>
 
       {/* WORKFLOW STEPPER INDICATOR */}
@@ -490,7 +424,6 @@ export default function IdentityCardApp({ onBack }) {
             templateId={selectedTemplateId}
             onEdit={() => setCurrentStep('CUSTOMIZE')}
             onCreateNew={handleResetForNewCard}
-            onSaveToGallery={handleSaveToGallery}
           />
         )}
       </main>
@@ -504,15 +437,6 @@ export default function IdentityCardApp({ onBack }) {
           onCancel={() => setCropperOpen(false)}
         />
       )}
-
-      {/* SAVED CARDS COLLECTION DRAWER */}
-      <SavedCardsDrawer
-        isOpen={savedDrawerOpen}
-        onClose={() => setSavedDrawerOpen(false)}
-        savedCards={savedCards}
-        onSelectCard={handleLoadSavedCard}
-        onDeleteCard={handleDeleteSavedCard}
-      />
     </div>
   );
 }
